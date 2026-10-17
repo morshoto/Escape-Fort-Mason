@@ -12,7 +12,8 @@ godot --path .
 ```
 
 Controls are configured in `project.godot`: WASD moves, Space jumps, the mouse
-aims/attacks, Tab swaps weapons, and Escape pauses.
+aims/attacks, Tab swaps weapons, Escape pauses, and T shows Dots' sample
+dialogue.
 
 The imported baseline was tested with Godot 4.7.2 using both editor/import
 initialization and a headless main-scene launch. See `LICENSE` for the source

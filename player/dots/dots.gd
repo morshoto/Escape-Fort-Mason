@@ -101,6 +101,12 @@ func get_movement_state() -> MovementState:
 	return MovementState.IDLE
 
 
+func show_message(message: String) -> void:
+	var dialogue := get_node_or_null("DialogueUI")
+	if dialogue != null and dialogue.has_method("show_message"):
+		dialogue.call("show_message", message)
+
+
 func _follow_weight(delta: float) -> float:
 	return 1.0 - exp(-follow_speed * delta)
 
