@@ -1,6 +1,7 @@
 extends SceneTree
 
 const STAGE_PATH := "res://level/fort_mason.tscn"
+const LEVEL_COLLISION_MASK := 2
 
 var _failures: Array[String] = []
 
@@ -33,6 +34,15 @@ func _run() -> void:
 			roof_visual != null and roof_visual.mesh is BoxMesh,
 			"Roof panel uses lightweight box geometry",
 		)
+		_check(
+			roof_panel is StaticBody3D and roof_panel.get_node_or_null("CollisionShape3D") is CollisionShape3D,
+			"Roof panel participates in camera collision",
+		)
+		if roof_panel is StaticBody3D:
+			_check(
+				(roof_panel.collision_layer & LEVEL_COLLISION_MASK) != 0,
+				"Roof panel uses the level collision layer",
+			)
 		if roof_visual != null and roof_visual.mesh is BoxMesh:
 			var roof_mesh := roof_visual.mesh as BoxMesh
 			_check(
@@ -80,6 +90,11 @@ func _run() -> void:
 		_check(
 			camera_controller != null and abs(float(camera_controller.get("_euler_rotation").y) - PI) < 0.01,
 			"Third-person camera starts toward the warehouse",
+		)
+		var camera_spring_arm := sam.get_node_or_null("CameraController/CameraSpringArm") as SpringArm3D
+		_check(
+			camera_spring_arm != null and (camera_spring_arm.collision_mask & LEVEL_COLLISION_MASK) != 0,
+			"Third-person camera detects level collisions",
 		)
 		_check(
 			sam.test_move(sam.global_transform, Vector3.DOWN * 2.0),
