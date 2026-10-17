@@ -19,7 +19,7 @@ func _run() -> void:
 	_test_follow_smoothing_converges_without_snapping()
 	_test_idle_bobbing_changes_height()
 	_test_movement_state_tracks_player_speed()
-	_test_visual_scene_has_no_collision_shape()
+	await _test_visual_scene_has_alfred_contract()
 	_test_fort_mason_scene_wires_dots()
 
 	if _failures.is_empty():
@@ -131,15 +131,55 @@ func _test_movement_state_tracks_player_speed() -> void:
 	_assert(_dots.get_movement_state() == Dots.MovementState.RUN, "fast player should produce run state")
 
 
-func _test_visual_scene_has_no_collision_shape() -> void:
+func _test_visual_scene_has_alfred_contract() -> void:
 	var scene := load("res://player/dots/dots.tscn") as PackedScene
 	_assert(scene != null, "Dots scene should be loadable")
 	if scene == null:
 		return
 	var instance := scene.instantiate()
+	root.add_child(instance)
+	await process_frame
+
+	var body := instance.get_node_or_null("Body") as MeshInstance3D
+	_assert(body != null, "Alfred body should exist")
+	if body != null:
+		_assert(body.mesh is ArrayMesh, "Alfred body should use a custom mesh")
+		if body.mesh is ArrayMesh:
+			var body_mesh := body.mesh as ArrayMesh
+			var vertices := body_mesh.surface_get_arrays(0)[Mesh.ARRAY_VERTEX] as PackedVector3Array
+			_assert(vertices.size() >= 40, "Alfred body should have a shaped silhouette")
+		var body_material := body.material_override as StandardMaterial3D
+		_assert(
+			body_material != null
+				and body_material.albedo_color.r > 0.8
+				and body_material.albedo_color.g > 0.5
+				and body_material.albedo_color.b < 0.3,
+			"Alfred body should use a bright yellow material",
+		)
+
+	var glasses := instance.get_node_or_null("Glasses") as Node3D
+	_assert(glasses != null, "Alfred glasses should exist")
+	if glasses != null:
+		_assert(glasses.get_node_or_null("LeftFrame") is MeshInstance3D, "Left round glasses frame should exist")
+		_assert(glasses.get_node_or_null("RightFrame") is MeshInstance3D, "Right round glasses frame should exist")
+		var left_frame := glasses.get_node_or_null("LeftFrame") as MeshInstance3D
+		var right_frame := glasses.get_node_or_null("RightFrame") as MeshInstance3D
+		_assert(left_frame != null and left_frame.mesh is TorusMesh, "Left frame should be round")
+		_assert(right_frame != null and right_frame.mesh is TorusMesh, "Right frame should be round")
+		_assert(glasses.get_node_or_null("LeftEye") is MeshInstance3D, "Left simple eye should exist")
+		_assert(glasses.get_node_or_null("RightEye") is MeshInstance3D, "Right simple eye should exist")
+
+	var bow_tie := instance.get_node_or_null("BowTie") as Node3D
+	_assert(bow_tie != null, "Alfred bow tie should exist")
+	if bow_tie != null:
+		_assert(bow_tie.get_node_or_null("LeftWing") is MeshInstance3D, "Left bow tie wing should exist")
+		_assert(bow_tie.get_node_or_null("RightWing") is MeshInstance3D, "Right bow tie wing should exist")
+		_assert(bow_tie.get_node_or_null("Knot") is MeshInstance3D, "Bow tie knot should exist")
+
 	var collision_shapes := instance.find_children("*", "CollisionShape3D", true, false)
 	_assert(collision_shapes.is_empty(), "Dots visual should not add a collision shape")
-	instance.free()
+	instance.queue_free()
+	await process_frame
 
 
 func _test_fort_mason_scene_wires_dots() -> void:
