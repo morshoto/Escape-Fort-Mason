@@ -13,7 +13,7 @@ const ENTRIES := [
 
 func _ready() -> void:
 	var camera := get_node("GalleryCamera") as Camera3D
-	camera.look_at_from_position(Vector3(0.0, 2.1, 10.0), Vector3(0.0, 0.85, 0.0))
+	camera.look_at_from_position(Vector3(0.0, 2.1, 14.5), Vector3(0.0, 0.85, 0.0))
 	for entry in ENTRIES:
 		var dots := DOTS_SCENE.instantiate() as Dots
 		dots.name = "Dots%s" % entry[0]

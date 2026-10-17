@@ -2,6 +2,7 @@ extends SceneTree
 
 const CAPTURE_SIZE := Vector2i(640, 640)
 const CAPTURE_DIR := "res://docs/dots-screenshots"
+const Dots = preload("res://player/dots/dots.gd")
 
 var _viewport: SubViewport
 var _camera: Camera3D
@@ -19,22 +20,34 @@ func _capture() -> void:
 	root.add_child(_viewport)
 	_setup_studio()
 	var dots_scene := load("res://player/dots/dots.tscn") as PackedScene
-	var dots := dots_scene.instantiate() as Node3D
-	_viewport.add_child(dots)
-	await _wait_for_render()
-
-	for view in [
-		["alfred-front", Vector3(0.0, 1.0, 4.4)],
-		["alfred-45", Vector3(3.2, 1.0, 3.2)],
-		["alfred-side", Vector3(4.4, 1.0, 0.0)],
-		["alfred-back", Vector3(0.0, 1.0, -4.4)],
+	for variant_data in [
+		["blue", Dots.VisualVariant.BLUE],
+		["green", Dots.VisualVariant.GREEN],
+		["alfred", Dots.VisualVariant.ALFRED],
+		["pink", Dots.VisualVariant.PINK],
 	]:
-		_camera.position = view[1]
-		_camera.look_at(Vector3(0.0, 0.82, 0.0))
+		var dots := dots_scene.instantiate() as Dots
+		dots.visual_variant = variant_data[1]
+		_viewport.add_child(dots)
 		await _wait_for_render()
-		_save_view(view[0])
+		for view in [
+			["%s-front" % variant_data[0], Vector3(0.0, 1.0, 4.4)],
+			["%s-45" % variant_data[0], Vector3(3.2, 1.0, 3.2)],
+			["%s-side" % variant_data[0], Vector3(4.4, 1.0, 0.0)],
+		]:
+			_camera.position = view[1]
+			_camera.look_at(Vector3(0.0, 0.82, 0.0))
+			await _wait_for_render()
+			_save_view(view[0])
+		dots.queue_free()
+		await process_frame
 
-	dots.queue_free()
+	var gallery := _capture_gallery()
+	await _wait_for_render()
+	_save_view("dots-gallery")
+	gallery.queue_free()
+	await process_frame
+	_camera.make_current()
 	await process_frame
 	_capture_gameplay()
 	await _wait_for_render()
@@ -82,6 +95,13 @@ func _capture_gameplay() -> void:
 	_viewport.add_child(fort)
 	_camera.position = Vector3(-5.0, 4.0, 20.0)
 	_camera.look_at(Vector3(0.0, 1.35, 12.0))
+
+
+func _capture_gallery() -> Node3D:
+	var gallery_scene := load("res://player/dots/dots_gallery.tscn") as PackedScene
+	var gallery := gallery_scene.instantiate() as Node3D
+	_viewport.add_child(gallery)
+	return gallery
 
 
 func _wait_for_render() -> void:
