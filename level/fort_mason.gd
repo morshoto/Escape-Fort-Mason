@@ -92,7 +92,7 @@ func _build_warehouse() -> void:
 	_add_box(warehouse, "BackWall", Vector3(21.0, 5.0, 0.5), Vector3(0.0, 2.5, -19.75), wall_material)
 	_add_box(warehouse, "WestFrontWing", Vector3(7.0, 5.0, 0.5), Vector3(-7.0, 2.5, -4.25), wall_material)
 	_add_box(warehouse, "EastFrontWing", Vector3(7.0, 5.0, 0.5), Vector3(7.0, 2.5, -4.25), wall_material)
-	_add_box(warehouse, "RoofPanel", Vector3(21.0, 0.18, 16.0), Vector3(0.0, 5.15, -12.0), _material("roof", METAL), false)
+	_add_box(warehouse, "RoofPanel", Vector3(21.0, 0.18, 16.0), Vector3(0.0, 5.15, -12.0), _material("roof", METAL))
 
 	var roof_frame := Node3D.new()
 	roof_frame.name = "RoofFrame"
@@ -165,6 +165,9 @@ func _configure_spawn() -> void:
 		var camera_controller := sam.get_node_or_null("CameraController")
 		if camera_controller != null:
 			camera_controller.set("_euler_rotation", Vector3(0.0, PI, 0.0))
+		var camera_spring_arm := sam.get_node_or_null("CameraController/CameraSpringArm") as SpringArm3D
+		if camera_spring_arm != null:
+			camera_spring_arm.collision_mask = 1 | LEVEL_COLLISION_LAYER
 
 
 func _add_street_lamp(parent: Node3D, lamp_name: String, position: Vector3) -> void:
