@@ -9,6 +9,7 @@ const QUATERNIUS_MODEL_PATH := "res://player/sam/quaternius/Superhero_Male_FullB
 const QUATERNIUS_HAIR_PATH := "res://player/sam/quaternius/Hair_SimpleParted.gltf"
 const REQUIRED_ANIMATIONS := ["idle", "walk", "run", "jump", "fall", "attack"]
 const REQUIRED_METHODS := ["idle", "move", "jump", "fall", "attack"]
+const REQUIRED_HUMANOID_BONES := ["Head", "clavicle_l", "clavicle_r", "upperarm_l", "upperarm_r", "thigh_l", "thigh_r"]
 
 var _failed := false
 
@@ -48,6 +49,17 @@ func _check_scene_contract() -> void:
 	for animation_name in REQUIRED_ANIMATIONS:
 		_require(animation_tree.get_animation(animation_name) != null, "skin has %s animation" % animation_name)
 
+	var skeleton := skin.find_child("Skeleton3D", true, false) as Skeleton3D
+	_require(skeleton != null, "skin has the imported Humanoid Skeleton3D")
+	if skeleton == null:
+		return
+	for bone_name in REQUIRED_HUMANOID_BONES:
+		_require(skeleton.find_bone(bone_name) != -1, "skin has %s Humanoid bone" % bone_name)
+	_require(skeleton.get_bone_pose_scale(skeleton.find_bone("Head")).x > 1.0, "natural proportions enlarge the head")
+	_require(skeleton.get_bone_pose_scale(skeleton.find_bone("clavicle_l")).x < 1.0, "natural proportions narrow the shoulders")
+	_require(_animation_targets_skeleton(animation_tree.get_animation("walk")), "walk targets the imported Skeleton3D")
+	_require(_animation_targets_skeleton(animation_tree.get_animation("run")), "run targets the imported Skeleton3D")
+
 	for visual_name in ["Face", "Hair", "Top", "Jacket", "QuaterniusModel"]:
 		_require(skin.has_node("SamModel/%s" % visual_name), "skin has %s visual marker" % visual_name)
 
@@ -56,10 +68,17 @@ func _check_scene_contract() -> void:
 	skin.idle()
 	await process_frame
 	skin.move()
-	await process_frame
+	for _frame in range(8):
+		await process_frame
 	var playback := animation_tree.get("parameters/StateMachine/playback") as AnimationNodeStateMachinePlayback
 	_require(playback != null, "skin has a state machine playback")
 	_require(playback.get_current_node() == "Move", "move enters Move state")
+	var arm_bone := skeleton.find_bone("upperarm_l")
+	var arm_pose_before := skeleton.get_bone_pose_rotation(arm_bone)
+	for _frame in range(12):
+		await process_frame
+	var arm_pose_after := skeleton.get_bone_pose_rotation(arm_bone)
+	_require(not arm_pose_before.is_equal_approx(arm_pose_after), "Move animates the visible Humanoid arm")
 
 
 func _check_player_wiring() -> void:
@@ -102,3 +121,10 @@ func _require(condition: bool, description: String) -> void:
 		return
 	_failed = true
 	push_error("FAIL: %s" % description)
+
+
+func _animation_targets_skeleton(animation: Animation) -> bool:
+	for track_index in animation.get_track_count():
+		if str(animation.track_get_path(track_index)).contains("Skeleton3D:bones/"):
+			return true
+	return false
