@@ -1,7 +1,8 @@
-[gd_scene load_steps=3 format=3]
+[gd_scene load_steps=4 format=3]
 
 [ext_resource type="Script" path="res://level/fort_mason.gd" id="1_fort_mason"]
 [ext_resource type="PackedScene" uid="uid://ciqrpd5675boy" path="res://player/player.tscn" id="2_player"]
+[ext_resource type="PackedScene" path="res://player/dots/dots.tscn" id="3_dots"]
 
 [node name="FortMason" type="Node3D"]
 script = ExtResource("1_fort_mason")
@@ -17,6 +18,9 @@ rotation = Vector3(0, 3.141593, 0)
 [node name="Sam" parent="." instance=ExtResource("2_player")]
 collision_mask = 3
 position = Vector3(0, 1, 12)
+
+[node name="Dots" parent="." instance=ExtResource("3_dots")]
+target_path = NodePath("../Sam")
 
 [node name="OutdoorPlaza" type="Node3D" parent="."]
 

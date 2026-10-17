@@ -12,10 +12,28 @@ Compatibility renderer, and a local Chromium WebGL2 run.
 | Replaceable 3D model | LIKELY / CODE-CONFIRMED | `player/player.tscn` references the model through a separate `CharacterSkin` scene. A replacement skin needs the `CharacterSkin` contract (`idle`, `move`, `jump`, `fall`, `attack`, and `walk_run_blending`). |
 | Web (Compatibility) | PASS | The Web preset exported successfully; the generated WASM/PCK package loaded through a local HTTP server and rendered the demo menu in Chromium. |
 
+## Dots companion verification
+
+| Check | Result | Evidence |
+| --- | --- | --- |
+| Dots scene and visual | PASS | `player/dots/dots.tscn` loads in Godot 4.7.2 Editor import; the Alfred visual contract covers the custom yellow body, round black glasses, simple eyes, bow tie, and no collision. |
+| Four Dots variants | PASS | `tests/test_dots_variants.gd` loads Alfred, Blue, Green, and Pink, checks each visual root and defining geometry, and verifies all remain visual-only. |
+| Dots Gallery | PASS | `player/dots/dots_gallery.tscn` instantiates the four variants side by side with a dedicated review camera and labels. |
+| Variant visual evidence | PASS | `docs/dots-screenshots/` contains front, 45-degree, and side captures for Blue, Green, Alfred, and Pink, plus `dots-gallery.png`. |
+| Player-relative spawn | PASS | `level/fort_mason.tscn` instantiates `Dots` beside `Sam` with `target_path = NodePath("../Sam")`; the exported right/above/rear offset is relative to Sam. |
+| Follow, turn, and bob behavior | PASS | Headless `tests/test_dots_companion.gd` covers rotated offsets, smooth convergence, idle bobbing, and idle/walk/run thresholds. |
+| Non-blocking companion | PASS | The visual scene contains no `CollisionShape3D` or physics body, so it cannot block Sam. |
+| Chromium Web gameplay | PASS | The exported Compatibility build rendered Alfred beside Sam in Chromium; synthetic `W` input moved the player while Dots remained visible and followed. |
+| Capture reproducibility | PASS | `tools/capture_dots_visuals.gd` regenerates all variant views, the four-Dot gallery, and the Sam-plus-Dots gameplay capture through a 640x640 Compatibility `SubViewport`. |
+| Native headed Editor playtest | PENDING | Headless Editor import and runtime passed; a headed native Godot playtest was not available in this session. |
+
 ## Commands
 
 ```sh
 godot --headless --path . --editor --quit
+godot --headless --path . --script tests/player_skin_contract_test.gd
+godot --headless --path . --script tests/test_dots_companion.gd
+godot --headless --path . --script tests/test_fort_mason_stage.gd
 godot --headless --path . --export-release Web /tmp/escape-fort-mason-web/index.html
 godot --path .
 ```
