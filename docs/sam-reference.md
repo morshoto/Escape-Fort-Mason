@@ -43,3 +43,4 @@ No reference photos or scraped likeness assets are committed.
 - [Side](screenshots/sam-side.png)
 - [Back](screenshots/sam-back.png)
 - [Operated in the actual game scene](screenshots/sam-gameplay.png)
+- [Web gameplay movement capture](screenshots/sam-gameplay.mov)
