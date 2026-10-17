@@ -12,6 +12,7 @@ script = ExtResource("1_fort_mason")
 
 [node name="SamSpawn" type="Marker3D" parent="."]
 position = Vector3(0, 1, 12)
+rotation = Vector3(0, 3.141593, 0)
 
 [node name="Sam" parent="." instance=ExtResource("2_player")]
 collision_mask = 3

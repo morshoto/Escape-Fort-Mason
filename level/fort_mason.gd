@@ -32,7 +32,7 @@ func _configure_night_environment() -> void:
 	environment.background_color = NIGHT_SKY
 	environment.ambient_light_source = Environment.AMBIENT_SOURCE_COLOR
 	environment.ambient_light_color = Color("#29416b")
-	environment.ambient_light_energy = 0.34
+	environment.ambient_light_energy = 0.48
 	environment.tonemap_mode = Environment.TONE_MAPPER_FILMIC
 	$WorldEnvironment.environment = environment
 
@@ -161,6 +161,9 @@ func _configure_spawn() -> void:
 	var spawn := $SamSpawn as Marker3D
 	if sam != null:
 		sam.global_transform = spawn.global_transform
+		var camera_controller := sam.get_node_or_null("CameraController")
+		if camera_controller != null:
+			camera_controller.set("_euler_rotation", Vector3(0.0, PI, 0.0))
 
 
 func _add_street_lamp(parent: Node3D, lamp_name: String, position: Vector3) -> void:

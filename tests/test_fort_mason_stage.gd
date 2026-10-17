@@ -26,6 +26,9 @@ func _run() -> void:
 	_check(stage.get_node_or_null("WarehouseInterior") is Node3D, "Warehouse interior exists")
 	_check(stage.get_node_or_null("SamSpawn") is Marker3D, "Sam spawn marker exists")
 	_check(stage.get_node_or_null("Sam") is CharacterBody3D, "Player is exposed as Sam")
+	var spawn := stage.get_node_or_null("SamSpawn") as Marker3D
+	if spawn != null:
+		_check(abs(spawn.rotation.y - PI) < 0.01, "Sam spawn faces the warehouse entrance")
 	_check(
 		stage.get_node_or_null("OutdoorPlaza/StreetLamps").get_child_count() == 4,
 		"Outdoor plaza has four street lamps",
@@ -58,6 +61,11 @@ func _run() -> void:
 
 	var sam := stage.get_node_or_null("Sam") as CharacterBody3D
 	if sam != null:
+		var camera_controller := sam.get_node_or_null("CameraController")
+		_check(
+			camera_controller != null and abs(float(camera_controller.get("_euler_rotation").y) - PI) < 0.01,
+			"Third-person camera starts toward the warehouse",
+		)
 		_check(
 			sam.test_move(sam.global_transform, Vector3.DOWN * 2.0),
 			"Sam has ground collision at the outdoor spawn",
