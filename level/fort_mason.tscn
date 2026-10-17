@@ -1,0 +1,23 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://level/fort_mason.gd" id="1_fort_mason"]
+[ext_resource type="PackedScene" uid="uid://ciqrpd5675boy" path="res://player/player.tscn" id="2_player"]
+
+[node name="FortMason" type="Node3D"]
+script = ExtResource("1_fort_mason")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+
+[node name="MoonLight" type="DirectionalLight3D" parent="."]
+
+[node name="SamSpawn" type="Marker3D" parent="."]
+position = Vector3(0, 1, 12)
+rotation = Vector3(0, 3.141593, 0)
+
+[node name="Sam" parent="." instance=ExtResource("2_player")]
+collision_mask = 3
+position = Vector3(0, 1, 12)
+
+[node name="OutdoorPlaza" type="Node3D" parent="."]
+
+[node name="WarehouseInterior" type="Node3D" parent="."]
