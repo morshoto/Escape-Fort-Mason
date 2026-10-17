@@ -12,10 +12,23 @@ Compatibility renderer, and a local Chromium WebGL2 run.
 | Replaceable 3D model | LIKELY / CODE-CONFIRMED | `player/player.tscn` references the model through a separate `CharacterSkin` scene. A replacement skin needs the `CharacterSkin` contract (`idle`, `move`, `jump`, `fall`, `attack`, and `walk_run_blending`). |
 | Web (Compatibility) | PASS | The Web preset exported successfully; the generated WASM/PCK package loaded through a local HTTP server and rendered the demo menu in Chromium. |
 
+## Dots companion verification
+
+| Check | Result | Evidence |
+| --- | --- | --- |
+| Dots scene and visual | PASS | `player/dots/dots.tscn` loads in Godot 4.7.2 Editor import and uses only built-in primitive meshes and materials. |
+| Player-relative spawn | PASS | `Dots` initializes at the exported right/above/rear offset from `Player` through `target_path = NodePath("../Player")`. |
+| Follow, turn, and bob behavior | PASS | Headless `tests/test_dots_companion.gd` covers rotated offsets, smooth convergence, idle bobbing, and idle/walk/run thresholds. |
+| Non-blocking companion | PASS | The visual scene contains no `CollisionShape3D` or physics body, so it cannot block Sam. |
+| Chromium Web gameplay | PASS | The exported Compatibility build rendered Dots beside Sam in Chromium; synthetic `W` input moved the player while Dots remained visible and followed. |
+| Native headed Editor playtest | PENDING | Headless Editor import and runtime passed; a headed native Godot playtest was not available in this session. |
+
 ## Commands
 
 ```sh
 godot --headless --path . --editor --quit
+godot --headless --path . --script tests/player_skin_contract_test.gd
+godot --headless --path . --script tests/test_dots_companion.gd
 godot --headless --path . --export-release Web /tmp/escape-fort-mason-web/index.html
 godot --path .
 ```
