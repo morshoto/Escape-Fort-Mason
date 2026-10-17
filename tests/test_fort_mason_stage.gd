@@ -24,6 +24,21 @@ func _run() -> void:
 	_check(stage.name == "FortMason", "Fort Mason scene has a stable root name")
 	_check(stage.get_node_or_null("OutdoorPlaza") is Node3D, "Outdoor plaza exists")
 	_check(stage.get_node_or_null("WarehouseInterior") is Node3D, "Warehouse interior exists")
+	var warehouse := stage.get_node_or_null("WarehouseInterior") as Node3D
+	var roof_panel := warehouse.get_node_or_null("RoofPanel") as Node3D if warehouse != null else null
+	_check(roof_panel != null, "Warehouse has a roof panel")
+	if roof_panel != null:
+		var roof_visual := roof_panel.get_node_or_null("Visual") as MeshInstance3D
+		_check(
+			roof_visual != null and roof_visual.mesh is BoxMesh,
+			"Roof panel uses lightweight box geometry",
+		)
+		if roof_visual != null and roof_visual.mesh is BoxMesh:
+			var roof_mesh := roof_visual.mesh as BoxMesh
+			_check(
+				roof_mesh.size.x >= 20.0 and roof_mesh.size.z >= 15.0 and roof_mesh.size.y < 0.5,
+				"Roof panel covers the warehouse footprint",
+			)
 	_check(stage.get_node_or_null("SamSpawn") is Marker3D, "Sam spawn marker exists")
 	_check(stage.get_node_or_null("Sam") is CharacterBody3D, "Player is exposed as Sam")
 	var spawn := stage.get_node_or_null("SamSpawn") as Marker3D
