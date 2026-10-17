@@ -116,7 +116,11 @@ func _build_alfred_visuals() -> void:
 	var body := MeshInstance3D.new()
 	body.name = "Body"
 	body.mesh = _create_body_mesh()
-	body.material_override = _make_material(ALFRED_YELLOW, 0.9)
+	var body_material := _make_material(ALFRED_YELLOW, 0.9)
+	body_material.emission_enabled = true
+	body_material.emission = Color("#6b4d0f")
+	body_material.emission_energy_multiplier = 0.22
+	body.material_override = body_material
 	visual_root.add_child(body)
 
 	_build_glasses(visual_root)
