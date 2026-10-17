@@ -24,6 +24,7 @@ enum MovementState {
 @export var target_path: NodePath
 
 var _target: CharacterBody3D
+var _target_orientation: Node3D
 var _bob_time := 0.0
 
 
@@ -32,7 +33,7 @@ func _ready() -> void:
 		set_target(get_node_or_null(target_path) as CharacterBody3D)
 	if _target:
 		global_position = get_follow_target_position()
-		rotation.y = _target.global_rotation.y
+		rotation.y = _target_heading_y()
 
 
 func _physics_process(delta: float) -> void:
@@ -44,21 +45,36 @@ func _physics_process(delta: float) -> void:
 	desired_position.y += sin(_bob_time) * bob_height
 	global_position = global_position.lerp(desired_position, _follow_weight(delta))
 
-	var desired_rotation := _target.global_rotation.y
+	var desired_rotation := _target_heading_y()
 	rotation.y = lerp_angle(rotation.y, desired_rotation, _rotation_weight(delta))
 
 
 func set_target(target: CharacterBody3D) -> void:
 	_target = target
+	_target_orientation = null
+	if _target:
+		_target_orientation = _target.get_node_or_null("CharacterSkin") as Node3D
 	if _target and is_inside_tree():
 		global_position = get_follow_target_position()
-		rotation.y = _target.global_rotation.y
+		rotation.y = _target_heading_y()
 
 
 func get_follow_target_position() -> Vector3:
 	if not is_instance_valid(_target):
 		return global_position
-	return _target.global_position + _target.global_basis * follow_offset
+	return _target.global_position + _target_heading_basis() * follow_offset
+
+
+func _target_heading_basis() -> Basis:
+	if is_instance_valid(_target_orientation):
+		return _target_orientation.global_basis
+	return _target.global_basis
+
+
+func _target_heading_y() -> float:
+	if is_instance_valid(_target_orientation):
+		return _target_orientation.global_rotation.y
+	return _target.global_rotation.y
 
 
 func get_movement_state() -> MovementState:
