@@ -15,8 +15,8 @@ func _init() -> void:
 
 
 func _run() -> void:
-	_check_scene_contract()
-	_check_rollback_skin()
+	await _check_scene_contract()
+	await _check_rollback_skin()
 	_check_player_wiring()
 	_check_asset_provenance()
 	if _failed:
