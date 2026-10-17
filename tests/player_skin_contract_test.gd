@@ -2,6 +2,7 @@ extends SceneTree
 
 const PLAYER_SCENE_PATH := "res://player/player.tscn"
 const SKIN_SCENE_PATH := "res://player/sam/sam_skin.tscn"
+const ASSET_DOC_PATH := "res://docs/ASSETS.md"
 const REQUIRED_ANIMATIONS := ["idle", "walk", "run", "jump", "fall", "attack"]
 const REQUIRED_METHODS := ["idle", "move", "jump", "fall", "attack"]
 
@@ -15,6 +16,7 @@ func _init() -> void:
 func _run() -> void:
 	_check_scene_contract()
 	_check_player_wiring()
+	_check_asset_provenance()
 	if _failed:
 		quit(1)
 		return
@@ -59,6 +61,13 @@ func _check_player_wiring() -> void:
 	var player_text := FileAccess.get_file_as_string(PLAYER_SCENE_PATH)
 	_require(player_text.contains("res://player/sam/sam_skin.tscn"), "player uses Sam skin scene")
 	_require(not player_text.contains("res://player/gdbot/gdbot_skin.tscn"), "player no longer uses GDbot skin")
+
+
+func _check_asset_provenance() -> void:
+	var asset_doc := FileAccess.get_file_as_string(ASSET_DOC_PATH)
+	_require(asset_doc.contains("locally authored"), "asset provenance identifies local authorship")
+	_require(asset_doc.contains("Godot primitive meshes"), "asset provenance identifies mesh source")
+	_require(asset_doc.contains("No third-party"), "asset provenance rules out unknown third-party assets")
 
 
 func _require(condition: bool, description: String) -> void:
