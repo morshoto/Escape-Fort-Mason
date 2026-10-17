@@ -11,9 +11,13 @@ size = Vector3(0.34, 0.36, 0.035)
 albedo_color = Color(0.045, 0.075, 0.12, 1)
 metallic = 0.05
 roughness = 0.8
+cull_mode = 2
 
 [sub_resource type="BoxMesh" id="Mesh_jacket_panel"]
 size = Vector3(0.06, 0.34, 0.018)
+
+[sub_resource type="BoxMesh" id="Mesh_jacket_overlay"]
+size = Vector3(0.28, 0.34, 0.03)
 
 [sub_resource type="StandardMaterial3D" id="Material_jacket_panel"]
 albedo_color = Color(0.22, 0.38, 0.52, 1)
@@ -258,24 +262,31 @@ script = ExtResource("1_sam")
 [node name="Jacket" type="Node3D" parent="SamModel"]
 
 [node name="JacketShell" type="MeshInstance3D" parent="SamModel/Jacket"]
-position = Vector3(0, 1.31, 0.16)
+position = Vector3(0, 0, 0)
 mesh = SubResource("Mesh_jacket_shell")
 material_override = SubResource("Material_jacket_shell")
 
 [node name="JacketFrontPanel" type="MeshInstance3D" parent="SamModel/Jacket"]
-position = Vector3(0, 1.31, 0.19)
+position = Vector3(0, 1.31, 0.2)
 mesh = SubResource("Mesh_jacket_panel")
 material_override = SubResource("Material_jacket_panel")
 
-[node name="JacketCollar" type="MeshInstance3D" parent="SamModel/Jacket"]
-position = Vector3(0, 1.5, 0.18)
-mesh = SubResource("Mesh_jacket_collar")
+[node name="JacketFrontOverlay" type="MeshInstance3D" parent="SamModel/Jacket"]
+position = Vector3(0, 1.31, 0.17)
+mesh = SubResource("Mesh_jacket_overlay")
 material_override = SubResource("Material_jacket_shell")
 
+[node name="JacketCollar" type="MeshInstance3D" parent="SamModel/Jacket"]
+position = Vector3(0, 1.5, 0.3)
+mesh = SubResource("Mesh_jacket_collar")
+material_override = SubResource("Material_jacket_shell")
+visible = false
+
 [node name="JacketHem" type="MeshInstance3D" parent="SamModel/Jacket"]
-position = Vector3(0, 1.12, 0.18)
+position = Vector3(0, 1.12, 0.3)
 mesh = SubResource("Mesh_jacket_hem")
 material_override = SubResource("Material_jacket_shell")
+visible = false
 
 [node name="Top" type="Node3D" parent="SamModel"]
 

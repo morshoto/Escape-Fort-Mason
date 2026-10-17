@@ -78,36 +78,44 @@ func _apply_stylized_materials() -> void:
 
 
 func _build_fitted_jacket_mesh() -> void:
-	var front_top_left := Vector3(-0.2, 1.5, 0.18)
-	var front_top_right := Vector3(0.2, 1.5, 0.18)
-	var front_bottom_right := Vector3(0.17, 1.1, 0.18)
-	var front_bottom_left := Vector3(-0.17, 1.1, 0.18)
-	var back_top_left := Vector3(-0.2, 1.5, 0.13)
-	var back_top_right := Vector3(0.2, 1.5, 0.13)
-	var back_bottom_right := Vector3(0.17, 1.1, 0.13)
-	var back_bottom_left := Vector3(-0.17, 1.1, 0.13)
+	var front_top_left := Vector3(-0.17, 1.46, 0.08)
+	var front_top_right := Vector3(0.17, 1.46, 0.08)
+	var front_bottom_right := Vector3(0.14, 1.12, 0.08)
+	var front_bottom_left := Vector3(-0.14, 1.12, 0.08)
+	var back_top_left := Vector3(-0.17, 1.46, -0.02)
+	var back_top_right := Vector3(0.17, 1.46, -0.02)
+	var back_bottom_right := Vector3(0.14, 1.12, -0.02)
+	var back_bottom_left := Vector3(-0.14, 1.12, -0.02)
 	var vertices := [
 		front_top_left, front_top_right, front_bottom_right, front_bottom_left,
 		back_top_left, back_top_right, back_bottom_right, back_bottom_left,
 	]
 	var triangles := [
-		0, 1, 2, 0, 2, 3,
-		4, 6, 5, 4, 7, 6,
-		0, 4, 5, 0, 5, 1,
-		1, 5, 6, 1, 6, 2,
-		2, 6, 7, 2, 7, 3,
-		3, 7, 4, 3, 4, 0,
+		0, 2, 1, 0, 3, 2,
+		4, 5, 6, 4, 6, 7,
+		0, 5, 4, 0, 1, 5,
+		1, 6, 5, 1, 2, 6,
+		2, 7, 6, 2, 3, 7,
+		3, 4, 7, 3, 0, 4,
 	]
 	var surface_tool := SurfaceTool.new()
 	surface_tool.begin(Mesh.PRIMITIVE_TRIANGLES)
+	surface_tool.set_material(jacket_shell_material())
 	for vertex_index in triangles:
 		surface_tool.set_uv(Vector2.ZERO)
 		surface_tool.add_vertex(vertices[vertex_index])
+	surface_tool.index()
 	surface_tool.generate_normals()
 	var jacket_mesh := surface_tool.commit()
 	var jacket_shell := get_node("SamModel/Jacket/JacketShell") as MeshInstance3D
 	if jacket_shell != null:
+		jacket_shell.position = Vector3.ZERO
 		jacket_shell.mesh = jacket_mesh
+
+
+func jacket_shell_material() -> Material:
+	var jacket_shell := get_node("SamModel/Jacket/JacketShell") as MeshInstance3D
+	return jacket_shell.material_override if jacket_shell != null else null
 
 
 func _find_skeleton() -> Skeleton3D:

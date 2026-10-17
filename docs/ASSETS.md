@@ -15,9 +15,9 @@ The selected reusable character model is `player/sam/sam_skin.tscn`.
 - Design: a fictional, cartoon Sam Altman impression using a narrow human face,
   dark parted hair, calm expression, muted blue technical layer, and charcoal
   trousers. It is not a facial likeness claim or an endorsement.
-- Garment geometry: the scene adds one fitted jacket shell mesh with a front
-  panel, collar, and hem to make the everyday technical layer visible as a
-  garment rather than only a body color replacement.
+- Garment geometry: the scene adds a fitted jacket shell and separate front
+  overlay/panel meshes so the everyday technical layer is visible as geometry,
+  not only as a body color replacement.
 - Reference brief: recurring cues and source links are documented in
   [sam-reference.md](sam-reference.md).
 - Reuse: the scene extends the shared `CharacterSkin` contract and can replace
