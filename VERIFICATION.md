@@ -52,13 +52,13 @@ greeting. The existing Dots visual evidence is in `docs/dots-screenshots/`.
 | Check | Result | Evidence / limit |
 | --- | --- | --- |
 | Public Pages entry point and WASM/PCK/JS assets | PASS | Chromium rendered the published scene. `bash tools/smoke_web_assets.sh` checks the four same-origin assets over HTTPS. Pages workflow run [39046929840](https://github.com/morshoto/Escape-Fort-Mason/actions/runs/39046929840) completed successfully. |
-| Godot import and gameplay contracts | PASS | Godot 4.7.2 headless import; player skin, Dots follow, dialogue, variants, Fort Mason stage, and Decisions client tests all passed on PR #17 head `cf3b255`. |
+| Godot import and gameplay contracts | PASS | Godot 4.7.2 headless import; player skin, Dots follow, dialogue, variants, Fort Mason stage, and Decisions client tests all passed on PR #17 head `1d8dc8c`. |
 | Worker response and browser CORS | PASS (local) | Chromium Web export sent OPTIONS and POST to the local Worker; the Worker returned a real OpenAI Decisions choice and Dots displayed its Japanese mapping. This used the unmerged PR #17 code and local loopback endpoint. |
 | API error and missing-endpoint fallback | PASS (contract) | Decisions client tests cover timeout, network/HTTP errors, malformed or unapproved responses, and an unset endpoint. These are not a public Worker test. |
 | Secret exclusion from Web export | PASS | The final export was checked against the configured local key and `.dev.vars` path; neither was present. `.dev.vars` was removed after testing and was never committed. |
-| Public Pages → production Worker → OpenAI | BLOCKED | Cloudflare has not been deployed: `wrangler whoami` reports no authentication, and the repository has no Actions secrets or variables. The production Decisions endpoint remains blank. The public page therefore cannot yet exercise the live API. |
+| Public Pages → production Worker → OpenAI | BLOCKED | The production Worker is deployed at `https://escape-fort-mason-decisions.escape-fort-mason.workers.dev/api/decision`; an HTTPS CORS preflight succeeded, and an earlier HTTP smoke request to the production Worker returned a real OpenAI Decisions choice. The Worker secret is currently unset pending key rotation, so the endpoint now fails closed with 503. The public Pages → Worker → OpenAI Chromium flow has not been verified. |
 
-Overall result: **BLOCKED**, not MVP PASS. Public rendering and local API integration are independently verified, but acceptance requires an account owner to deploy the Worker with `OPENAI_API_KEY` stored as a Worker secret, configure its HTTPS URL, then repeat the API interaction against the public Pages origin. Native headed Editor interaction, controller input, and public API console/network evidence remain unverified.
+Overall result: **BLOCKED**, not MVP PASS. Public rendering and local API integration are independently verified. After the replacement key is stored as a Worker secret, repeat the API interaction from the public Pages origin and record Chromium network/console evidence. Native headed Editor interaction, controller input, and public Pages API evidence remain unverified.
 
 Recheck published static assets with:
 
