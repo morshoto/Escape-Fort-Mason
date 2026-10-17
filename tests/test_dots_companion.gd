@@ -13,6 +13,7 @@ func _init() -> void:
 
 func _run() -> void:
 	_create_fixture()
+	_test_initial_spawn_and_turning()
 	_test_follow_position_uses_target_frame()
 	_test_follow_smoothing_converges_without_snapping()
 	_test_idle_bobbing_changes_height()
@@ -49,6 +50,18 @@ func _test_follow_position_uses_target_frame() -> void:
 	var expected := _target.global_position + _target.global_basis * _dots.follow_offset
 	var actual: Vector3 = _dots.get_follow_target_position()
 	_assert_vector_close(actual, expected, "follow offset should use target rotation")
+
+
+func _test_initial_spawn_and_turning() -> void:
+	_dots.set_target(_target)
+	_assert_vector_close(_dots.global_position, _dots.get_follow_target_position(), "companion should spawn at its offset")
+
+	_dots.rotation.y = 0.0
+	var initial_rotation := _dots.rotation.y
+	_target.rotation.y += 0.5
+	_dots._physics_process(0.1)
+	_assert(not is_equal_approx(_dots.rotation.y, initial_rotation), "companion should turn with the player")
+	_target.rotation.y -= 0.5
 
 
 func _test_follow_smoothing_converges_without_snapping() -> void:
