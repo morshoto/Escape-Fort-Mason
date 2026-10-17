@@ -22,3 +22,7 @@ project has an open Mac/Vulkan compatibility report.
 
 See [VERIFICATION.md](VERIFICATION.md) for the six-item local check list and
 its evidence.
+
+The current player visual is the locally authored Sam-inspired skin described
+in [docs/ASSETS.md](docs/ASSETS.md). The original GDbot skin remains available
+as a rollback/reference implementation.

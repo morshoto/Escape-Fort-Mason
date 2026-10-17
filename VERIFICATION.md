@@ -5,12 +5,14 @@ Compatibility renderer, and a local Chromium WebGL2 run.
 
 | Check | Result | Evidence |
 | --- | --- | --- |
-| WASD movement | PASS | Synthetic `W` input moved the player from `(-3.298, 0.5, -13.017)` to approximately `(-3.298, 0.501, -9.983)` in the loaded main scene. |
-| Third-person mouse camera | PASS (Web) / native desktop pending | A real pointer drag in the locally served Chromium Web build changed the rendered third-person view. `player/camera_controller.gd` handles captured `InputEventMouseMotion`; native headed Godot could not be launched because the macOS session was locked. |
-| Idle / Walk / Run animation | PASS | The loaded `AnimationTree` reached `Idle` after releasing movement and `Move` during movement; the walk/run blend parameter changed. The `walk`, `run`, and `idle` clips are defined in `player/gdbot/gdbot_skin.tscn`. |
-| Wall / ground collision | PASS | `is_on_floor()` was true in the main scene, and `CharacterBody3D.test_move()` detected the nearby level boxes. The player scene contains a capsule collision shape and the terrain importer generates physics. |
-| Replaceable 3D model | LIKELY / CODE-CONFIRMED | `player/player.tscn` references the model through a separate `CharacterSkin` scene. A replacement skin needs the `CharacterSkin` contract (`idle`, `move`, `jump`, `fall`, `attack`, and `walk_run_blending`). |
-| Web (Compatibility) | PASS | The Web preset exported successfully; the generated WASM/PCK package loaded through a local HTTP server and rendered the demo menu in Chromium. |
+| WASD movement | PASS (contract/main-scene smoke) | The Sam skin contract test passes, the full main scene launches headlessly, and the exported Chromium build accepts `W` input without runtime errors. The player movement script and collision body are unchanged. |
+| Third-person mouse camera | PASS (Chromium Web) | A real pointer drag in the locally served Chromium Web build changed the rendered third-person view. `player/camera_controller.gd` still handles captured `InputEventMouseMotion`. |
+| Idle / Walk / Run animation | PASS (contract + retarget) | The loaded Sam `AnimationTree` exposes `idle`, `walk`, and `run`; the visible Humanoid `Skeleton3D` receives state-driven arm and leg poses, while dedicated retarget preview clips target the same bone paths. Jump, fall, and attack clips are also present. |
+| Wall / ground collision | PASS (unchanged contract) | The full main scene launches with the existing capsule collision, shape cast, terrain physics, camera, and weapon hierarchy unchanged. |
+| Replaceable 3D model | PASS (headless contract) | `player/player.tscn` uses `player/sam/sam_skin.tscn`; the contract test loads the skin, checks `CharacterSkin` methods, verifies the animation library, and enters the Move state. |
+| Sam-inspired visual and provenance | PASS (code/assets) | The skin has parted hair, a fitted jacket shell/front panel mesh, muted-blue top material, and charcoal trousers. `docs/ASSETS.md` records Quaternius provenance, licensing, and the retained GDbot rollback path. |
+| Godot 4.7.2 Editor | PASS (import/headless) | `godot --headless --path . --editor --quit` completed with no parse or load errors. A headed Compatibility launch also started with the expected OpenGL/Metal renderer; native headed interaction was not separately captured. |
+| Web (Compatibility) | PASS (Chromium) | The Web preset exported successfully; the generated WASM/PCK package loaded through a local HTTP server, entered the playable scene, rendered the Sam skin, accepted keyboard input, and responded to a camera drag. |
 
 ## Dots companion verification
 

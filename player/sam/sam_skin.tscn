@@ -1,0 +1,305 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://player/sam/sam_skin.gd" id="1_sam"]
+[ext_resource type="PackedScene" path="res://player/sam/quaternius/Superhero_Male_FullBody.gltf" id="2_quaternius_model"]
+[ext_resource type="PackedScene" path="res://player/sam/quaternius/Hair_SimpleParted.gltf" id="3_quaternius_hair"]
+
+[sub_resource type="BoxMesh" id="Mesh_jacket_shell"]
+size = Vector3(0.34, 0.36, 0.035)
+
+[sub_resource type="StandardMaterial3D" id="Material_jacket_shell"]
+albedo_color = Color(0.045, 0.075, 0.12, 1)
+metallic = 0.05
+roughness = 0.8
+cull_mode = 2
+
+[sub_resource type="BoxMesh" id="Mesh_jacket_panel"]
+size = Vector3(0.06, 0.34, 0.018)
+
+[sub_resource type="BoxMesh" id="Mesh_jacket_overlay"]
+size = Vector3(0.28, 0.34, 0.03)
+
+[sub_resource type="StandardMaterial3D" id="Material_jacket_panel"]
+albedo_color = Color(0.22, 0.38, 0.52, 1)
+roughness = 0.78
+
+[sub_resource type="BoxMesh" id="Mesh_jacket_collar"]
+size = Vector3(0.28, 0.045, 0.055)
+
+[sub_resource type="BoxMesh" id="Mesh_jacket_hem"]
+size = Vector3(0.34, 0.035, 0.04)
+
+[sub_resource type="Animation" id="Animation_reset"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("SamModel:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, 0, 0)]
+}
+[sub_resource type="Animation" id="Animation_idle"]
+resource_name = "idle"
+length = 2.4
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("SamModel:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 1.2, 2.4),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector3(0, 0, 0), Vector3(0, 0.025, 0), Vector3(0, 0, 0)]
+}
+[sub_resource type="Animation" id="Animation_walk"]
+resource_name = "walk"
+length = 0.8
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("SamModel:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.4, 0.8),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector3(0, 0, 0), Vector3(0, 0.06, 0), Vector3(0, 0, 0)]
+}
+tracks/1/type = "method"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0.2, 0.6),
+"transitions": PackedFloat32Array(1, 1),
+"values": [{"args": [], "method": &"emit_step"}, {"args": [], "method": &"emit_step"}]
+}
+
+[sub_resource type="Animation" id="Animation_run"]
+resource_name = "run"
+length = 0.55
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("SamModel:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.275, 0.55),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector3(0, 0, 0), Vector3(0, 0.1, 0), Vector3(0, 0, 0)]
+}
+tracks/1/type = "method"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0.14, 0.42),
+"transitions": PackedFloat32Array(1, 1),
+"values": [{"args": [], "method": &"emit_step"}, {"args": [], "method": &"emit_step"}]
+}
+
+[sub_resource type="Animation" id="Animation_jump"]
+resource_name = "jump"
+length = 0.45
+
+[sub_resource type="Animation" id="Animation_fall"]
+resource_name = "fall"
+length = 0.6
+loop_mode = 1
+
+[sub_resource type="Animation" id="Animation_attack"]
+resource_name = "attack"
+length = 0.35
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("SamModel:rotation_degrees")
+tracks/0/interp = 1
+tracks/0/loop_wrap = false
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.12, 0.35),
+"transitions": PackedFloat32Array(1, 0.5, 1),
+"update": 0,
+"values": [Vector3(0, 0, 0), Vector3(0, -12, 0), Vector3(0, 0, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_ground_impact"]
+resource_name = "ground_impact"
+length = 0.25
+
+[sub_resource type="Animation" id="Animation_step"]
+resource_name = "step"
+length = 0.8
+loop_mode = 1
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_sam"]
+_data = {
+&"RESET": SubResource("Animation_reset"),
+&"attack": SubResource("Animation_attack"),
+&"fall": SubResource("Animation_fall"),
+&"ground_impact": SubResource("Animation_ground_impact"),
+&"idle": SubResource("Animation_idle"),
+&"jump": SubResource("Animation_jump"),
+&"run": SubResource("Animation_run"),
+&"step": SubResource("Animation_step"),
+&"walk": SubResource("Animation_walk")
+}
+
+[sub_resource type="AnimationNodeAnimation" id="Node_idle"]
+animation = &"idle"
+
+[sub_resource type="AnimationNodeAnimation" id="Node_walk"]
+animation = &"walk"
+
+[sub_resource type="AnimationNodeAnimation" id="Node_run"]
+animation = &"run"
+
+[sub_resource type="AnimationNodeAnimation" id="Node_step"]
+animation = &"step"
+
+[sub_resource type="AnimationNodeBlend2" id="Node_walk_run"]
+
+[sub_resource type="AnimationNodeTimeScale" id="Node_step_scale"]
+
+[sub_resource type="AnimationNodeAdd2" id="Node_move_add"]
+
+[sub_resource type="AnimationNodeBlendTree" id="Node_move_tree"]
+nodes/output/position = Vector2(1120, 176)
+nodes/Add2/node = SubResource("Node_move_add")
+nodes/Add2/position = Vector2(880, 176)
+nodes/StepTimeScale/node = SubResource("Node_step_scale")
+nodes/StepTimeScale/position = Vector2(672, 352)
+nodes/Step/node = SubResource("Node_step")
+nodes/Step/position = Vector2(448, 352)
+nodes/WalkRunBlending/node = SubResource("Node_walk_run")
+nodes/WalkRunBlending/position = Vector2(672, 48)
+nodes/Walk/node = SubResource("Node_walk")
+nodes/Walk/position = Vector2(448, 48)
+nodes/Run/node = SubResource("Node_run")
+nodes/Run/position = Vector2(448, 192)
+node_connections = [&"output", 0, &"Add2", &"Add2", 0, &"WalkRunBlending", &"Add2", 1, &"StepTimeScale", &"StepTimeScale", 0, &"Step", &"WalkRunBlending", 0, &"Walk", &"WalkRunBlending", 1, &"Run"]
+
+[sub_resource type="AnimationNodeAnimation" id="Node_jump"]
+animation = &"jump"
+
+[sub_resource type="AnimationNodeAnimation" id="Node_fall"]
+animation = &"fall"
+
+[sub_resource type="AnimationNodeAnimation" id="Node_ground_impact"]
+animation = &"ground_impact"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="Transition_xfade"]
+xfade_time = 0.1
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="Transition_auto"]
+advance_mode = 2
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="Transition_one_shot"]
+xfade_time = 0.1
+switch_mode = 1
+
+[sub_resource type="AnimationNodeStateMachine" id="Node_state_machine"]
+states/End/position = Vector2(920, 112)
+states/Fall/node = SubResource("Node_fall")
+states/Fall/position = Vector2(560, 224)
+states/GroundImpact/node = SubResource("Node_ground_impact")
+states/GroundImpact/position = Vector2(784, 224)
+states/Idle/node = SubResource("Node_idle")
+states/Idle/position = Vector2(480, 112)
+states/Jump/node = SubResource("Node_jump")
+states/Jump/position = Vector2(480, 224)
+states/Move/node = SubResource("Node_move_tree")
+states/Move/position = Vector2(704, 112)
+states/Start/position = Vector2(336, 112)
+transitions = ["Jump", "Fall", SubResource("Transition_xfade"), "Fall", "GroundImpact", SubResource("Transition_xfade"), "Idle", "Jump", SubResource("Transition_xfade"), "Start", "Idle", SubResource("Transition_auto"), "Idle", "Fall", SubResource("Transition_xfade"), "GroundImpact", "Idle", SubResource("Transition_one_shot"), "Idle", "Move", SubResource("Transition_xfade"), "Move", "Idle", SubResource("Transition_xfade"), "Move", "Jump", SubResource("Transition_xfade"), "Move", "Fall", SubResource("Transition_xfade"), "GroundImpact", "Move", SubResource("Transition_one_shot")]
+
+[sub_resource type="AnimationNodeAnimation" id="Node_attack"]
+animation = &"attack"
+
+[sub_resource type="AnimationNodeOneShot" id="Node_attack_one_shot"]
+fadein_time = 0.05
+fadeout_time = 0.1
+break_loop_at_end = true
+
+[sub_resource type="AnimationNodeBlendTree" id="Node_root_tree"]
+nodes/output/position = Vector2(592, 96)
+nodes/StateMachine/node = SubResource("Node_state_machine")
+nodes/StateMachine/position = Vector2(0, 96)
+nodes/AttackOneShot/node = SubResource("Node_attack_one_shot")
+nodes/AttackOneShot/position = Vector2(240, 96)
+nodes/AttackAnimation/node = SubResource("Node_attack")
+nodes/AttackAnimation/position = Vector2(0, 256)
+node_connections = [&"output", 0, &"AttackOneShot", &"AttackOneShot", 0, &"StateMachine", &"AttackOneShot", 1, &"AttackAnimation"]
+
+[node name="SamSkin" type="Node3D"]
+script = ExtResource("1_sam")
+
+[node name="SamModel" type="Node3D" parent="."]
+
+[node name="QuaterniusModel" parent="SamModel" instance=ExtResource("2_quaternius_model")]
+
+[node name="Face" type="Node3D" parent="SamModel"]
+
+[node name="Hair" parent="SamModel" instance=ExtResource("3_quaternius_hair")]
+
+[node name="Jacket" type="Node3D" parent="SamModel"]
+
+[node name="JacketShell" type="MeshInstance3D" parent="SamModel/Jacket"]
+position = Vector3(0, 0, 0)
+mesh = SubResource("Mesh_jacket_shell")
+material_override = SubResource("Material_jacket_shell")
+
+[node name="JacketFrontPanel" type="MeshInstance3D" parent="SamModel/Jacket"]
+position = Vector3(0, 1.31, 0.2)
+mesh = SubResource("Mesh_jacket_panel")
+material_override = SubResource("Material_jacket_panel")
+
+[node name="JacketFrontOverlay" type="MeshInstance3D" parent="SamModel/Jacket"]
+position = Vector3(0, 1.31, 0.17)
+mesh = SubResource("Mesh_jacket_overlay")
+material_override = SubResource("Material_jacket_shell")
+
+[node name="JacketCollar" type="MeshInstance3D" parent="SamModel/Jacket"]
+position = Vector3(0, 1.5, 0.3)
+mesh = SubResource("Mesh_jacket_collar")
+material_override = SubResource("Material_jacket_shell")
+visible = false
+
+[node name="JacketHem" type="MeshInstance3D" parent="SamModel/Jacket"]
+position = Vector3(0, 1.12, 0.3)
+mesh = SubResource("Mesh_jacket_hem")
+material_override = SubResource("Material_jacket_shell")
+visible = false
+
+[node name="Top" type="Node3D" parent="SamModel"]
+
+[node name="Head" type="Node3D" parent="SamModel"]
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries/ = SubResource("AnimationLibrary_sam")
+
+[node name="AnimationTree" type="AnimationTree" parent="."]
+unique_name_in_owner = true
+active = true
+tree_root = SubResource("Node_root_tree")
+anim_player = NodePath("../AnimationPlayer")
+parameters/StateMachine/Move/StepTimeScale/scale = 1.0
+parameters/StateMachine/Move/WalkRunBlending/blend_amount = 0.0
+parameters/AttackOneShot/request = 0
