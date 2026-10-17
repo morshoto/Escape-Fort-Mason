@@ -1,19 +1,28 @@
 # Character asset provenance
 
-## Sam-inspired player skin
+## Sam Altman-inspired player skin
 
 The selected reusable character model is `player/sam/sam_skin.tscn`.
 
-- Source: locally authored in this repository from Godot primitive meshes.
-- License: the scene and script are project-authored source covered by the MIT
-  license in [LICENSE](../LICENSE).
-- No third-party model, texture, or animation is included by the Sam skin.
-- Design: a fictional Sam-inspired caricature using dark hair, glasses, a red
-  hoodie, navy pants, and light shoes. It is not a facial likeness or an
-  endorsement.
+- Base asset: Quaternius Universal Base Characters ([official page](https://quaternius.com/packs/universalbasecharacters.html)), Standard edition.
+- Included source files: `player/sam/quaternius/` contains the selected male
+  glTF, `Hair_SimpleParted` glTF, their buffers/textures, and the original
+  `License_Standard.txt`.
+- License: the Standard edition is CC0 1.0 Universal. The license text is
+  preserved beside the imported assets.
+- Adaptation: the Godot glTF source references were normalized to the bundled
+  normal-map filenames; the model geometry and textures remain from Quaternius.
+- Design: a fictional, cartoon Sam Altman impression using a narrow human face,
+  dark parted hair, calm expression, muted blue technical layer, and charcoal
+  trousers. It is not a facial likeness claim or an endorsement.
+- Reference brief: recurring cues and source links are documented in
+  [sam-reference.md](sam-reference.md).
 - Reuse: the scene extends the shared `CharacterSkin` contract and can replace
   the player visual without changing movement, collision, camera, or weapon
   code.
+- Rights boundary: no reference photos, screenshots of real people, or scraped
+  likeness assets are committed. The review screenshots are renders of the
+  project-owned scene only.
 
 ## Retained baseline skin
 
@@ -21,4 +30,4 @@ The selected reusable character model is `player/sam/sam_skin.tscn`.
 originates from the GDQuest third-person controller sample and remains subject
 to the upstream attribution and CC-BY-NC-SA 4.0 terms recorded in [LICENSE](../LICENSE).
 
-The Sam skin intentionally does not copy or modify those art assets.
+The Sam skin does not copy or modify those baseline art assets.

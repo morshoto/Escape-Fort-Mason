@@ -4,6 +4,7 @@ const PLAYER_SCENE_PATH := "res://player/player.tscn"
 const SKIN_SCENE_PATH := "res://player/sam/sam_skin.tscn"
 const ROLLBACK_SCENE_PATH := "res://player/gdbot/gdbot_skin.tscn"
 const ASSET_DOC_PATH := "res://docs/ASSETS.md"
+const REFERENCE_DOC_PATH := "res://docs/sam-reference.md"
 const QUATERNIUS_MODEL_PATH := "res://player/sam/quaternius/Superhero_Male_FullBody.gltf"
 const QUATERNIUS_HAIR_PATH := "res://player/sam/quaternius/Hair_SimpleParted.gltf"
 const REQUIRED_ANIMATIONS := ["idle", "walk", "run", "jump", "fall", "attack"]
@@ -81,14 +82,19 @@ func _check_rollback_skin() -> void:
 
 func _check_asset_provenance() -> void:
 	var asset_doc := FileAccess.get_file_as_string(ASSET_DOC_PATH)
+	var reference_doc := FileAccess.get_file_as_string(REFERENCE_DOC_PATH)
 	_require(FileAccess.file_exists(QUATERNIUS_MODEL_PATH), "Quaternius male model is included")
 	_require(FileAccess.file_exists(QUATERNIUS_HAIR_PATH), "Quaternius parted hair is included")
 	_require(asset_doc.contains("Quaternius Universal Base Characters"), "asset provenance names Quaternius")
 	_require(asset_doc.contains("CC0"), "asset provenance records the CC0 license")
 	_require(asset_doc.contains("Sam Altman"), "asset provenance records the visual brief")
-	_require(asset_doc.contains("short dark hair"), "asset provenance records the hair cue")
+	_require(reference_doc.to_lower().contains("short-to-medium dark hair"), "reference brief records the hair cue")
 	_require(asset_doc.contains("muted blue"), "asset provenance records the clothing cue")
-	_require(asset_doc.contains("No reference photos"), "asset provenance excludes reference photos")
+	_require(asset_doc.to_lower().contains("no reference photos"), "asset provenance excludes reference photos")
+	_require(reference_doc.contains("forum.openai.com"), "reference brief includes the Forum source")
+	_require(reference_doc.contains("youtube.com/watch?v=Wpxv-8nG8ec"), "reference brief includes Town Hall")
+	_require(reference_doc.contains("youtube.com/watch?v=hS1YqcewH0c"), "reference brief includes DevDay")
+	_require(reference_doc.contains("openai.com/index/sam-altman-un-security-council-remarks"), "reference brief includes UN remarks")
 
 
 func _require(condition: bool, description: String) -> void:

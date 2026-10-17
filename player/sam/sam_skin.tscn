@@ -1,85 +1,8 @@
 [gd_scene format=3]
 
 [ext_resource type="Script" path="res://player/sam/sam_skin.gd" id="1_sam"]
-
-[sub_resource type="StandardMaterial3D" id="Material_skin"]
-albedo_color = Color(0.78, 0.53, 0.37, 1)
-roughness = 0.9
-
-[sub_resource type="StandardMaterial3D" id="Material_hair"]
-albedo_color = Color(0.08, 0.045, 0.025, 1)
-roughness = 0.85
-
-[sub_resource type="StandardMaterial3D" id="Material_hoodie"]
-albedo_color = Color(0.72, 0.08, 0.06, 1)
-roughness = 0.95
-
-[sub_resource type="StandardMaterial3D" id="Material_hoodie_trim"]
-albedo_color = Color(0.95, 0.72, 0.18, 1)
-roughness = 0.8
-
-[sub_resource type="StandardMaterial3D" id="Material_pants"]
-albedo_color = Color(0.035, 0.055, 0.1, 1)
-roughness = 0.95
-
-[sub_resource type="StandardMaterial3D" id="Material_shoes"]
-albedo_color = Color(0.92, 0.92, 0.88, 1)
-roughness = 0.75
-
-[sub_resource type="StandardMaterial3D" id="Material_glasses"]
-albedo_color = Color(0.04, 0.32, 0.72, 1)
-metallic = 0.2
-roughness = 0.3
-
-[sub_resource type="CapsuleMesh" id="Mesh_hoodie"]
-radius = 0.44
-height = 1.05
-radial_segments = 16
-rings = 6
-
-[sub_resource type="SphereMesh" id="Mesh_head"]
-radial_segments = 20
-rings = 12
-
-[sub_resource type="CylinderMesh" id="Mesh_hair"]
-top_radius = 0.46
-bottom_radius = 0.5
-height = 0.24
-radial_segments = 20
-
-[sub_resource type="CapsuleMesh" id="Mesh_arm"]
-radius = 0.13
-height = 0.78
-radial_segments = 12
-rings = 4
-
-[sub_resource type="SphereMesh" id="Mesh_hand"]
-radial_segments = 12
-rings = 8
-
-[sub_resource type="CapsuleMesh" id="Mesh_leg"]
-radius = 0.17
-height = 0.86
-radial_segments = 12
-rings = 4
-
-[sub_resource type="BoxMesh" id="Mesh_shoe"]
-size = Vector3(0.34, 0.16, 0.6)
-
-[sub_resource type="BoxMesh" id="Mesh_glasses"]
-size = Vector3(0.28, 0.14, 0.07)
-
-[sub_resource type="BoxMesh" id="Mesh_glasses_bridge"]
-size = Vector3(0.13, 0.045, 0.05)
-
-[sub_resource type="BoxMesh" id="Mesh_pocket"]
-size = Vector3(0.48, 0.25, 0.06)
-
-[sub_resource type="CylinderMesh" id="Mesh_drawstring"]
-top_radius = 0.018
-bottom_radius = 0.018
-height = 0.32
-radial_segments = 8
+[ext_resource type="PackedScene" path="res://player/sam/quaternius/Superhero_Male_FullBody.gltf" id="2_quaternius_model"]
+[ext_resource type="PackedScene" path="res://player/sam/quaternius/Hair_SimpleParted.gltf" id="3_quaternius_hair"]
 
 [sub_resource type="Animation" id="Animation_reset"]
 length = 0.001
@@ -535,121 +458,29 @@ script = ExtResource("1_sam")
 
 [node name="SamModel" type="Node3D" parent="."]
 
-[node name="Hoodie" type="MeshInstance3D" parent="SamModel"]
-position = Vector3(0, 1.18, 0)
-material_override = SubResource("Material_hoodie")
-mesh = SubResource("Mesh_hoodie")
+[node name="QuaterniusModel" parent="SamModel" instance=ExtResource("2_quaternius_model")]
 
-[node name="HoodiePocket" type="MeshInstance3D" parent="SamModel"]
-position = Vector3(0, 0.97, -0.39)
-material_override = SubResource("Material_hoodie_trim")
-mesh = SubResource("Mesh_pocket")
+[node name="Face" type="Node3D" parent="SamModel"]
 
-[node name="Head" type="MeshInstance3D" parent="SamModel"]
-position = Vector3(0, 1.88, 0)
-scale = Vector3(0.48, 0.53, 0.43)
-material_override = SubResource("Material_skin")
-mesh = SubResource("Mesh_head")
+[node name="Hair" parent="SamModel" instance=ExtResource("3_quaternius_hair")]
 
-[node name="Hair" type="MeshInstance3D" parent="SamModel"]
-position = Vector3(0, 2.19, 0.01)
-material_override = SubResource("Material_hair")
-mesh = SubResource("Mesh_hair")
+[node name="Jacket" type="Node3D" parent="SamModel"]
 
-[node name="HairFront" type="MeshInstance3D" parent="SamModel"]
-position = Vector3(0, 2.13, -0.4)
-scale = Vector3(0.9, 0.32, 0.08)
-material_override = SubResource("Material_hair")
-mesh = SubResource("Mesh_head")
+[node name="Top" type="Node3D" parent="SamModel"]
 
-[node name="Glasses" type="Node3D" parent="SamModel"]
-position = Vector3(0, 1.97, -0.48)
-
-[node name="LeftLens" type="MeshInstance3D" parent="SamModel/Glasses"]
-position = Vector3(-0.14, 0, 0)
-material_override = SubResource("Material_glasses")
-mesh = SubResource("Mesh_glasses")
-
-[node name="RightLens" type="MeshInstance3D" parent="SamModel/Glasses"]
-position = Vector3(0.14, 0, 0)
-material_override = SubResource("Material_glasses")
-mesh = SubResource("Mesh_glasses")
-
-[node name="Bridge" type="MeshInstance3D" parent="SamModel/Glasses"]
-material_override = SubResource("Material_glasses")
-mesh = SubResource("Mesh_glasses_bridge")
-
-[node name="Nose" type="MeshInstance3D" parent="SamModel"]
-position = Vector3(0, 1.86, -0.43)
-scale = Vector3(0.1, 0.12, 0.16)
-material_override = SubResource("Material_skin")
-mesh = SubResource("Mesh_hand")
+[node name="Head" type="Node3D" parent="SamModel"]
 
 [node name="LeftArm" type="Node3D" parent="SamModel"]
-position = Vector3(-0.56, 1.44, 0)
-
-[node name="Arm" type="MeshInstance3D" parent="SamModel/LeftArm"]
-position = Vector3(0, -0.36, 0)
-material_override = SubResource("Material_hoodie")
-mesh = SubResource("Mesh_arm")
-
-[node name="Hand" type="MeshInstance3D" parent="SamModel/LeftArm"]
-position = Vector3(0, -0.78, 0)
-scale = Vector3(0.75, 0.75, 0.75)
-material_override = SubResource("Material_skin")
-mesh = SubResource("Mesh_hand")
+position = Vector3(-0.55, 1.4, 0)
 
 [node name="RightArm" type="Node3D" parent="SamModel"]
-position = Vector3(0.56, 1.44, 0)
-
-[node name="Arm" type="MeshInstance3D" parent="SamModel/RightArm"]
-position = Vector3(0, -0.36, 0)
-material_override = SubResource("Material_hoodie")
-mesh = SubResource("Mesh_arm")
-
-[node name="Hand" type="MeshInstance3D" parent="SamModel/RightArm"]
-position = Vector3(0, -0.78, 0)
-scale = Vector3(0.75, 0.75, 0.75)
-material_override = SubResource("Material_skin")
-mesh = SubResource("Mesh_hand")
+position = Vector3(0.55, 1.4, 0)
 
 [node name="LeftLeg" type="Node3D" parent="SamModel"]
 position = Vector3(-0.24, 0.7, 0)
 
-[node name="Leg" type="MeshInstance3D" parent="SamModel/LeftLeg"]
-position = Vector3(0, -0.4, 0)
-material_override = SubResource("Material_pants")
-mesh = SubResource("Mesh_leg")
-
-[node name="Shoe" type="MeshInstance3D" parent="SamModel/LeftLeg"]
-position = Vector3(0, -0.82, -0.1)
-material_override = SubResource("Material_shoes")
-mesh = SubResource("Mesh_shoe")
-
 [node name="RightLeg" type="Node3D" parent="SamModel"]
 position = Vector3(0.24, 0.7, 0)
-
-[node name="Leg" type="MeshInstance3D" parent="SamModel/RightLeg"]
-position = Vector3(0, -0.4, 0)
-material_override = SubResource("Material_pants")
-mesh = SubResource("Mesh_leg")
-
-[node name="Shoe" type="MeshInstance3D" parent="SamModel/RightLeg"]
-position = Vector3(0, -0.82, -0.1)
-material_override = SubResource("Material_shoes")
-mesh = SubResource("Mesh_shoe")
-
-[node name="LeftDrawstring" type="MeshInstance3D" parent="SamModel"]
-position = Vector3(-0.08, 1.19, -0.43)
-rotation_degrees = Vector3(0, 0, 8)
-material_override = SubResource("Material_hoodie_trim")
-mesh = SubResource("Mesh_drawstring")
-
-[node name="RightDrawstring" type="MeshInstance3D" parent="SamModel"]
-position = Vector3(0.08, 1.19, -0.43)
-rotation_degrees = Vector3(0, 0, -8)
-material_override = SubResource("Material_hoodie_trim")
-mesh = SubResource("Mesh_drawstring")
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 libraries/ = SubResource("AnimationLibrary_sam")
