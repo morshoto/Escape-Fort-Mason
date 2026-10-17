@@ -63,7 +63,7 @@ func _check_scene_contract() -> void:
 
 	for visual_name in ["Face", "Hair", "Top", "Jacket", "QuaterniusModel"]:
 		_require(skin.has_node("SamModel/%s" % visual_name), "skin has %s visual marker" % visual_name)
-	for garment_name in ["Jacket/JacketShell", "Jacket/JacketFrontPanel"]:
+	for garment_name in ["Jacket/JacketShell", "Jacket/JacketFrontPanel", "Jacket/JacketFrontOverlay"]:
 		var garment := skin.get_node("SamModel/%s" % garment_name) as MeshInstance3D
 		_require(garment != null and garment.mesh != null, "skin has fitted %s garment mesh" % garment_name)
 
