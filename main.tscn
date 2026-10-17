@@ -27,6 +27,7 @@
 [ext_resource type="PackedScene" uid="uid://okmv1cbta83x" path="res://enemies/smoke_puff/smoke_puff.tscn" id="26_4k2k6"]
 [ext_resource type="Shader" uid="uid://bp40q8ga3f2f7" path="res://enemies/smoke_puff/smoke_ball.gdshader" id="27_0rl1p"]
 [ext_resource type="Shader" uid="uid://c2ku3tyf6vhdc" path="res://enemies/smoke_puff/smoke_ball_middle.gdshader" id="28_ok6jj"]
+[ext_resource type="PackedScene" path="res://player/dots/dots.tscn" id="29_dots"]
 
 [sub_resource type="Environment" id="Environment_allox"]
 background_mode = 2
@@ -182,6 +183,9 @@ shadow_enabled = true
 
 [node name="Player" parent="." unique_id=126940387 instance=ExtResource("2_q87gh")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.298, 0.5, -13.017)
+
+[node name="Dots" parent="." instance=ExtResource("29_dots")]
+target_path = NodePath("../Player")
 
 [node name="JumpingPad" parent="." unique_id=241169871 instance=ExtResource("3_w2mh2")]
 transform = Transform3D(0.893364, 0, 0.449335, 0, 1, 0, -0.449335, 0, 0.893364, -35.1316, 6.60685, 19.929)
