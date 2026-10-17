@@ -2,6 +2,7 @@ extends SceneTree
 
 const PLAYER_SCENE_PATH := "res://player/player.tscn"
 const SKIN_SCENE_PATH := "res://player/sam/sam_skin.tscn"
+const ROLLBACK_SCENE_PATH := "res://player/gdbot/gdbot_skin.tscn"
 const ASSET_DOC_PATH := "res://docs/ASSETS.md"
 const REQUIRED_ANIMATIONS := ["idle", "walk", "run", "jump", "fall", "attack"]
 const REQUIRED_METHODS := ["idle", "move", "jump", "fall", "attack"]
@@ -15,6 +16,7 @@ func _init() -> void:
 
 func _run() -> void:
 	_check_scene_contract()
+	_check_rollback_skin()
 	_check_player_wiring()
 	_check_asset_provenance()
 	if _failed:
@@ -61,6 +63,18 @@ func _check_player_wiring() -> void:
 	var player_text := FileAccess.get_file_as_string(PLAYER_SCENE_PATH)
 	_require(player_text.contains("res://player/sam/sam_skin.tscn"), "player uses Sam skin scene")
 	_require(not player_text.contains("res://player/gdbot/gdbot_skin.tscn"), "player no longer uses GDbot skin")
+
+
+func _check_rollback_skin() -> void:
+	var packed_skin := load(ROLLBACK_SCENE_PATH) as PackedScene
+	_require(packed_skin != null, "original GDbot skin remains loadable")
+	if packed_skin == null:
+		return
+	var skin := packed_skin.instantiate()
+	root.add_child(skin)
+	await process_frame
+	_require(skin.has_method("idle"), "original GDbot skin keeps CharacterSkin contract")
+	_require(skin.has_node("AnimationTree"), "original GDbot skin keeps AnimationTree")
 
 
 func _check_asset_provenance() -> void:
