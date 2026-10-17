@@ -17,7 +17,7 @@ Compatibility renderer, and a local Chromium WebGL2 run.
 | Check | Result | Evidence |
 | --- | --- | --- |
 | Dots scene and visual | PASS | `player/dots/dots.tscn` loads in Godot 4.7.2 Editor import and uses only built-in primitive meshes and materials. |
-| Player-relative spawn | PASS | `Dots` initializes at the exported right/above/rear offset from `Player` through `target_path = NodePath("../Player")`. |
+| Player-relative spawn | PASS | `level/fort_mason.tscn` instantiates `Dots` beside `Sam` with `target_path = NodePath("../Sam")`; the exported right/above/rear offset is relative to Sam. |
 | Follow, turn, and bob behavior | PASS | Headless `tests/test_dots_companion.gd` covers rotated offsets, smooth convergence, idle bobbing, and idle/walk/run thresholds. |
 | Non-blocking companion | PASS | The visual scene contains no `CollisionShape3D` or physics body, so it cannot block Sam. |
 | Chromium Web gameplay | PASS | The exported Compatibility build rendered Dots beside Sam in Chromium; synthetic `W` input moved the player while Dots remained visible and followed. |
@@ -29,6 +29,7 @@ Compatibility renderer, and a local Chromium WebGL2 run.
 godot --headless --path . --editor --quit
 godot --headless --path . --script tests/player_skin_contract_test.gd
 godot --headless --path . --script tests/test_dots_companion.gd
+godot --headless --path . --script tests/test_fort_mason_stage.gd
 godot --headless --path . --export-release Web /tmp/escape-fort-mason-web/index.html
 godot --path .
 ```
