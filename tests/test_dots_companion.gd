@@ -31,7 +31,7 @@ func _run() -> void:
 
 func _create_fixture() -> void:
 	_target = CharacterBody3D.new()
-	_target.global_position = Vector3(4.0, 2.0, -7.0)
+	_target.position = Vector3(4.0, 2.0, -7.0)
 	_target.rotation.y = PI / 2.0
 	root.add_child(_target)
 
