@@ -27,9 +27,9 @@ albedo_color = Color(0.92, 0.92, 0.88, 1)
 roughness = 0.75
 
 [sub_resource type="StandardMaterial3D" id="Material_glasses"]
-albedo_color = Color(0.015, 0.02, 0.03, 1)
-metallic = 0.35
-roughness = 0.25
+albedo_color = Color(0.04, 0.32, 0.72, 1)
+metallic = 0.2
+roughness = 0.3
 
 [sub_resource type="CapsuleMesh" id="Mesh_hoodie"]
 radius = 0.44
@@ -67,7 +67,7 @@ rings = 4
 size = Vector3(0.34, 0.16, 0.6)
 
 [sub_resource type="BoxMesh" id="Mesh_glasses"]
-size = Vector3(0.22, 0.11, 0.05)
+size = Vector3(0.28, 0.14, 0.07)
 
 [sub_resource type="BoxMesh" id="Mesh_glasses_bridge"]
 size = Vector3(0.13, 0.045, 0.05)
@@ -557,13 +557,13 @@ material_override = SubResource("Material_hair")
 mesh = SubResource("Mesh_hair")
 
 [node name="HairFront" type="MeshInstance3D" parent="SamModel"]
-position = Vector3(0, 2.12, -0.34)
-scale = Vector3(0.95, 0.7, 0.3)
+position = Vector3(0, 2.13, -0.4)
+scale = Vector3(0.9, 0.32, 0.08)
 material_override = SubResource("Material_hair")
 mesh = SubResource("Mesh_head")
 
 [node name="Glasses" type="Node3D" parent="SamModel"]
-position = Vector3(0, 1.94, -0.39)
+position = Vector3(0, 1.97, -0.48)
 
 [node name="LeftLens" type="MeshInstance3D" parent="SamModel/Glasses"]
 position = Vector3(-0.14, 0, 0)
