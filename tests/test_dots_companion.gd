@@ -14,6 +14,7 @@ func _init() -> void:
 func _run() -> void:
 	_create_fixture()
 	_test_initial_spawn_and_turning()
+	_test_player_skin_rotation_drives_companion()
 	_test_follow_position_uses_target_frame()
 	_test_follow_smoothing_converges_without_snapping()
 	_test_idle_bobbing_changes_height()
@@ -62,6 +63,37 @@ func _test_initial_spawn_and_turning() -> void:
 	_dots._physics_process(0.1)
 	_assert(not is_equal_approx(_dots.rotation.y, initial_rotation), "companion should turn with the player")
 	_target.rotation.y -= 0.5
+
+
+func _test_player_skin_rotation_drives_companion() -> void:
+	var player_scene := load("res://player/player.tscn") as PackedScene
+	_assert(player_scene != null, "GDQuest player scene should be loadable")
+	if player_scene == null:
+		return
+
+	var player := player_scene.instantiate() as CharacterBody3D
+	root.add_child(player)
+	var character_skin := player.get_node("CharacterSkin") as Node3D
+	character_skin.rotation.y = 0.0
+	_dots.bob_height = 0.0
+	_dots.set_target(player)
+
+	character_skin.rotation.y = PI / 2.0
+	var expected := player.global_position + character_skin.global_basis * _dots.follow_offset
+	_assert_vector_close(
+		_dots.get_follow_target_position(),
+		expected,
+		"follow offset should use the actual CharacterSkin frame",
+	)
+
+	_dots.rotation.y = 0.0
+	_dots._physics_process(0.1)
+	_assert(
+		_dots.rotation.y > 0.0,
+		"companion should turn with the actual CharacterSkin",
+	)
+	player.free()
+	_dots.set_target(_target)
 
 
 func _test_follow_smoothing_converges_without_snapping() -> void:
