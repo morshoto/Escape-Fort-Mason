@@ -2,6 +2,8 @@ class_name Dots
 extends Node3D
 
 const DotsVisuals = preload("res://player/dots/dots_visuals.gd")
+const DECISION_INPUT_ACTION := "request_dots_decision"
+const DECISION_CONTEXT := "Sam is exploring Fort Mason at night. Choose one helpful companion action."
 
 enum VisualVariant {
 	ALFRED,
@@ -59,6 +61,15 @@ func _physics_process(delta: float) -> void:
 
 	var desired_rotation := _target_heading_y()
 	rotation.y = lerp_angle(rotation.y, desired_rotation, _rotation_weight(delta))
+
+
+func _unhandled_input(event: InputEvent) -> void:
+	if not event.is_action_pressed(DECISION_INPUT_ACTION):
+		return
+	var decisions_client := get_node_or_null("DecisionsClient") as DotsDecisionClient
+	if decisions_client != null:
+		decisions_client.request_decision(DECISION_CONTEXT)
+		get_viewport().set_input_as_handled()
 
 
 func set_target(target: CharacterBody3D) -> void:
