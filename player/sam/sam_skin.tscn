@@ -1,0 +1,664 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://player/sam/sam_skin.gd" id="1_sam"]
+
+[sub_resource type="StandardMaterial3D" id="Material_skin"]
+albedo_color = Color(0.78, 0.53, 0.37, 1)
+roughness = 0.9
+
+[sub_resource type="StandardMaterial3D" id="Material_hair"]
+albedo_color = Color(0.08, 0.045, 0.025, 1)
+roughness = 0.85
+
+[sub_resource type="StandardMaterial3D" id="Material_hoodie"]
+albedo_color = Color(0.72, 0.08, 0.06, 1)
+roughness = 0.95
+
+[sub_resource type="StandardMaterial3D" id="Material_hoodie_trim"]
+albedo_color = Color(0.95, 0.72, 0.18, 1)
+roughness = 0.8
+
+[sub_resource type="StandardMaterial3D" id="Material_pants"]
+albedo_color = Color(0.035, 0.055, 0.1, 1)
+roughness = 0.95
+
+[sub_resource type="StandardMaterial3D" id="Material_shoes"]
+albedo_color = Color(0.92, 0.92, 0.88, 1)
+roughness = 0.75
+
+[sub_resource type="StandardMaterial3D" id="Material_glasses"]
+albedo_color = Color(0.015, 0.02, 0.03, 1)
+metallic = 0.35
+roughness = 0.25
+
+[sub_resource type="CapsuleMesh" id="Mesh_hoodie"]
+radius = 0.44
+height = 1.05
+radial_segments = 16
+rings = 6
+
+[sub_resource type="SphereMesh" id="Mesh_head"]
+radial_segments = 20
+rings = 12
+
+[sub_resource type="CylinderMesh" id="Mesh_hair"]
+top_radius = 0.46
+bottom_radius = 0.5
+height = 0.24
+radial_segments = 20
+
+[sub_resource type="CapsuleMesh" id="Mesh_arm"]
+radius = 0.13
+height = 0.78
+radial_segments = 12
+rings = 4
+
+[sub_resource type="SphereMesh" id="Mesh_hand"]
+radial_segments = 12
+rings = 8
+
+[sub_resource type="CapsuleMesh" id="Mesh_leg"]
+radius = 0.17
+height = 0.86
+radial_segments = 12
+rings = 4
+
+[sub_resource type="BoxMesh" id="Mesh_shoe"]
+size = Vector3(0.34, 0.16, 0.6)
+
+[sub_resource type="BoxMesh" id="Mesh_glasses"]
+size = Vector3(0.22, 0.11, 0.05)
+
+[sub_resource type="BoxMesh" id="Mesh_glasses_bridge"]
+size = Vector3(0.13, 0.045, 0.05)
+
+[sub_resource type="BoxMesh" id="Mesh_pocket"]
+size = Vector3(0.48, 0.25, 0.06)
+
+[sub_resource type="CylinderMesh" id="Mesh_drawstring"]
+top_radius = 0.018
+bottom_radius = 0.018
+height = 0.32
+radial_segments = 8
+
+[sub_resource type="Animation" id="Animation_reset"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("SamModel:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, 0, 0)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("SamModel/LeftArm:rotation_degrees")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, 0, 0)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("SamModel/RightArm:rotation_degrees")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, 0, 0)]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("SamModel/LeftLeg:rotation_degrees")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, 0, 0)]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("SamModel/RightLeg:rotation_degrees")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, 0, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_idle"]
+resource_name = "idle"
+length = 2.4
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("SamModel:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 1.2, 2.4),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector3(0, 0, 0), Vector3(0, 0.025, 0), Vector3(0, 0, 0)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("SamModel/LeftArm:rotation_degrees")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 1.2, 2.4),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector3(0, 0, 5), Vector3(0, 0, 2), Vector3(0, 0, 5)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("SamModel/RightArm:rotation_degrees")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 1.2, 2.4),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector3(0, 0, -5), Vector3(0, 0, -2), Vector3(0, 0, -5)]
+}
+
+[sub_resource type="Animation" id="Animation_walk"]
+resource_name = "walk"
+length = 0.8
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("SamModel:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.4, 0.8),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector3(0, 0, 0), Vector3(0, 0.06, 0), Vector3(0, 0, 0)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("SamModel/LeftArm:rotation_degrees")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.4, 0.8),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector3(-28, 0, 5), Vector3(28, 0, 5), Vector3(-28, 0, 5)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("SamModel/RightArm:rotation_degrees")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 0.4, 0.8),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector3(28, 0, -5), Vector3(-28, 0, -5), Vector3(28, 0, -5)]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("SamModel/LeftLeg:rotation_degrees")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0, 0.4, 0.8),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector3(25, 0, 0), Vector3(-25, 0, 0), Vector3(25, 0, 0)]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("SamModel/RightLeg:rotation_degrees")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0, 0.4, 0.8),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector3(-25, 0, 0), Vector3(25, 0, 0), Vector3(-25, 0, 0)]
+}
+tracks/5/type = "method"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath(".")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(0.2, 0.6),
+"transitions": PackedFloat32Array(1, 1),
+"values": [{"args": [], "method": &"emit_step"}, {"args": [], "method": &"emit_step"}]
+}
+
+[sub_resource type="Animation" id="Animation_run"]
+resource_name = "run"
+length = 0.55
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("SamModel:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.275, 0.55),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector3(0, 0, 0), Vector3(0, 0.1, 0), Vector3(0, 0, 0)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("SamModel/LeftArm:rotation_degrees")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.275, 0.55),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector3(-46, 0, 8), Vector3(46, 0, 8), Vector3(-46, 0, 8)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("SamModel/RightArm:rotation_degrees")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 0.275, 0.55),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector3(46, 0, -8), Vector3(-46, 0, -8), Vector3(46, 0, -8)]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("SamModel/LeftLeg:rotation_degrees")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0, 0.275, 0.55),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector3(38, 0, 0), Vector3(-38, 0, 0), Vector3(38, 0, 0)]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("SamModel/RightLeg:rotation_degrees")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0, 0.275, 0.55),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector3(-38, 0, 0), Vector3(38, 0, 0), Vector3(-38, 0, 0)]
+}
+tracks/5/type = "method"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath(".")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(0.14, 0.42),
+"transitions": PackedFloat32Array(1, 1),
+"values": [{"args": [], "method": &"emit_step"}, {"args": [], "method": &"emit_step"}]
+}
+
+[sub_resource type="Animation" id="Animation_jump"]
+resource_name = "jump"
+length = 0.45
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("SamModel/LeftArm:rotation_degrees")
+tracks/0/interp = 1
+tracks/0/loop_wrap = false
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.45),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector3(0, 0, 5), Vector3(-28, 0, 5)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("SamModel/RightArm:rotation_degrees")
+tracks/1/interp = 1
+tracks/1/loop_wrap = false
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.45),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector3(0, 0, -5), Vector3(-28, 0, -5)]
+}
+
+[sub_resource type="Animation" id="Animation_fall"]
+resource_name = "fall"
+length = 0.6
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("SamModel/LeftArm:rotation_degrees")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.3, 0.6),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector3(-18, 0, 30), Vector3(-12, 0, 30), Vector3(-18, 0, 30)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("SamModel/RightArm:rotation_degrees")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.3, 0.6),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector3(-18, 0, -30), Vector3(-12, 0, -30), Vector3(-18, 0, -30)]
+}
+
+[sub_resource type="Animation" id="Animation_attack"]
+resource_name = "attack"
+length = 0.35
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("SamModel/RightArm:rotation_degrees")
+tracks/0/interp = 1
+tracks/0/loop_wrap = false
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.12, 0.35),
+"transitions": PackedFloat32Array(1, 0.5, 1),
+"update": 0,
+"values": [Vector3(0, 0, -5), Vector3(-75, 0, -5), Vector3(-15, 0, -5)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("SamModel:rotation_degrees")
+tracks/1/interp = 1
+tracks/1/loop_wrap = false
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.12, 0.35),
+"transitions": PackedFloat32Array(1, 0.5, 1),
+"update": 0,
+"values": [Vector3(0, 0, 0), Vector3(0, -12, 0), Vector3(0, 0, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_ground_impact"]
+resource_name = "ground_impact"
+length = 0.25
+
+[sub_resource type="Animation" id="Animation_step"]
+resource_name = "step"
+length = 0.8
+loop_mode = 1
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_sam"]
+_data = {
+&"RESET": SubResource("Animation_reset"),
+&"attack": SubResource("Animation_attack"),
+&"fall": SubResource("Animation_fall"),
+&"ground_impact": SubResource("Animation_ground_impact"),
+&"idle": SubResource("Animation_idle"),
+&"jump": SubResource("Animation_jump"),
+&"run": SubResource("Animation_run"),
+&"step": SubResource("Animation_step"),
+&"walk": SubResource("Animation_walk")
+}
+
+[sub_resource type="AnimationNodeAnimation" id="Node_idle"]
+animation = &"idle"
+
+[sub_resource type="AnimationNodeAnimation" id="Node_walk"]
+animation = &"walk"
+
+[sub_resource type="AnimationNodeAnimation" id="Node_run"]
+animation = &"run"
+
+[sub_resource type="AnimationNodeAnimation" id="Node_step"]
+animation = &"step"
+
+[sub_resource type="AnimationNodeBlend2" id="Node_walk_run"]
+
+[sub_resource type="AnimationNodeTimeScale" id="Node_step_scale"]
+
+[sub_resource type="AnimationNodeAdd2" id="Node_move_add"]
+
+[sub_resource type="AnimationNodeBlendTree" id="Node_move_tree"]
+nodes/output/position = Vector2(1120, 176)
+nodes/Add2/node = SubResource("Node_move_add")
+nodes/Add2/position = Vector2(880, 176)
+nodes/StepTimeScale/node = SubResource("Node_step_scale")
+nodes/StepTimeScale/position = Vector2(672, 352)
+nodes/Step/node = SubResource("Node_step")
+nodes/Step/position = Vector2(448, 352)
+nodes/WalkRunBlending/node = SubResource("Node_walk_run")
+nodes/WalkRunBlending/position = Vector2(672, 48)
+nodes/Walk/node = SubResource("Node_walk")
+nodes/Walk/position = Vector2(448, 48)
+nodes/Run/node = SubResource("Node_run")
+nodes/Run/position = Vector2(448, 192)
+node_connections = [&"output", 0, &"Add2", &"Add2", 0, &"WalkRunBlending", &"Add2", 1, &"StepTimeScale", &"StepTimeScale", 0, &"Step", &"WalkRunBlending", 0, &"Walk", &"WalkRunBlending", 1, &"Run"]
+
+[sub_resource type="AnimationNodeAnimation" id="Node_jump"]
+animation = &"jump"
+
+[sub_resource type="AnimationNodeAnimation" id="Node_fall"]
+animation = &"fall"
+
+[sub_resource type="AnimationNodeAnimation" id="Node_ground_impact"]
+animation = &"ground_impact"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="Transition_xfade"]
+xfade_time = 0.1
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="Transition_auto"]
+advance_mode = 2
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="Transition_one_shot"]
+xfade_time = 0.1
+switch_mode = 1
+
+[sub_resource type="AnimationNodeStateMachine" id="Node_state_machine"]
+states/End/position = Vector2(920, 112)
+states/Fall/node = SubResource("Node_fall")
+states/Fall/position = Vector2(560, 224)
+states/GroundImpact/node = SubResource("Node_ground_impact")
+states/GroundImpact/position = Vector2(784, 224)
+states/Idle/node = SubResource("Node_idle")
+states/Idle/position = Vector2(480, 112)
+states/Jump/node = SubResource("Node_jump")
+states/Jump/position = Vector2(480, 224)
+states/Move/node = SubResource("Node_move_tree")
+states/Move/position = Vector2(704, 112)
+states/Start/position = Vector2(336, 112)
+transitions = ["Jump", "Fall", SubResource("Transition_xfade"), "Fall", "GroundImpact", SubResource("Transition_xfade"), "Idle", "Jump", SubResource("Transition_xfade"), "Start", "Idle", SubResource("Transition_auto"), "Idle", "Fall", SubResource("Transition_xfade"), "GroundImpact", "Idle", SubResource("Transition_one_shot"), "Idle", "Move", SubResource("Transition_xfade"), "Move", "Idle", SubResource("Transition_xfade"), "Move", "Jump", SubResource("Transition_xfade"), "Move", "Fall", SubResource("Transition_xfade"), "GroundImpact", "Move", SubResource("Transition_one_shot")]
+
+[sub_resource type="AnimationNodeAnimation" id="Node_attack"]
+animation = &"attack"
+
+[sub_resource type="AnimationNodeOneShot" id="Node_attack_one_shot"]
+fadein_time = 0.05
+fadeout_time = 0.1
+break_loop_at_end = true
+
+[sub_resource type="AnimationNodeBlendTree" id="Node_root_tree"]
+nodes/output/position = Vector2(592, 96)
+nodes/StateMachine/node = SubResource("Node_state_machine")
+nodes/StateMachine/position = Vector2(0, 96)
+nodes/AttackOneShot/node = SubResource("Node_attack_one_shot")
+nodes/AttackOneShot/position = Vector2(240, 96)
+nodes/AttackAnimation/node = SubResource("Node_attack")
+nodes/AttackAnimation/position = Vector2(0, 256)
+node_connections = [&"output", 0, &"AttackOneShot", &"AttackOneShot", 0, &"StateMachine", &"AttackOneShot", 1, &"AttackAnimation"]
+
+[node name="SamSkin" type="Node3D"]
+script = ExtResource("1_sam")
+
+[node name="SamModel" type="Node3D" parent="."]
+
+[node name="Hoodie" type="MeshInstance3D" parent="SamModel"]
+position = Vector3(0, 1.18, 0)
+material_override = SubResource("Material_hoodie")
+mesh = SubResource("Mesh_hoodie")
+
+[node name="HoodiePocket" type="MeshInstance3D" parent="SamModel"]
+position = Vector3(0, 0.97, -0.39)
+material_override = SubResource("Material_hoodie_trim")
+mesh = SubResource("Mesh_pocket")
+
+[node name="Head" type="MeshInstance3D" parent="SamModel"]
+position = Vector3(0, 1.88, 0)
+scale = Vector3(0.48, 0.53, 0.43)
+material_override = SubResource("Material_skin")
+mesh = SubResource("Mesh_head")
+
+[node name="Hair" type="MeshInstance3D" parent="SamModel"]
+position = Vector3(0, 2.19, 0.01)
+material_override = SubResource("Material_hair")
+mesh = SubResource("Mesh_hair")
+
+[node name="HairFront" type="MeshInstance3D" parent="SamModel"]
+position = Vector3(0, 2.12, -0.34)
+scale = Vector3(0.95, 0.7, 0.3)
+material_override = SubResource("Material_hair")
+mesh = SubResource("Mesh_head")
+
+[node name="Glasses" type="Node3D" parent="SamModel"]
+position = Vector3(0, 1.94, -0.39)
+
+[node name="LeftLens" type="MeshInstance3D" parent="SamModel/Glasses"]
+position = Vector3(-0.14, 0, 0)
+material_override = SubResource("Material_glasses")
+mesh = SubResource("Mesh_glasses")
+
+[node name="RightLens" type="MeshInstance3D" parent="SamModel/Glasses"]
+position = Vector3(0.14, 0, 0)
+material_override = SubResource("Material_glasses")
+mesh = SubResource("Mesh_glasses")
+
+[node name="Bridge" type="MeshInstance3D" parent="SamModel/Glasses"]
+material_override = SubResource("Material_glasses")
+mesh = SubResource("Mesh_glasses_bridge")
+
+[node name="Nose" type="MeshInstance3D" parent="SamModel"]
+position = Vector3(0, 1.86, -0.43)
+scale = Vector3(0.1, 0.12, 0.16)
+material_override = SubResource("Material_skin")
+mesh = SubResource("Mesh_hand")
+
+[node name="LeftArm" type="Node3D" parent="SamModel"]
+position = Vector3(-0.56, 1.44, 0)
+
+[node name="Arm" type="MeshInstance3D" parent="SamModel/LeftArm"]
+position = Vector3(0, -0.36, 0)
+material_override = SubResource("Material_hoodie")
+mesh = SubResource("Mesh_arm")
+
+[node name="Hand" type="MeshInstance3D" parent="SamModel/LeftArm"]
+position = Vector3(0, -0.78, 0)
+scale = Vector3(0.75, 0.75, 0.75)
+material_override = SubResource("Material_skin")
+mesh = SubResource("Mesh_hand")
+
+[node name="RightArm" type="Node3D" parent="SamModel"]
+position = Vector3(0.56, 1.44, 0)
+
+[node name="Arm" type="MeshInstance3D" parent="SamModel/RightArm"]
+position = Vector3(0, -0.36, 0)
+material_override = SubResource("Material_hoodie")
+mesh = SubResource("Mesh_arm")
+
+[node name="Hand" type="MeshInstance3D" parent="SamModel/RightArm"]
+position = Vector3(0, -0.78, 0)
+scale = Vector3(0.75, 0.75, 0.75)
+material_override = SubResource("Material_skin")
+mesh = SubResource("Mesh_hand")
+
+[node name="LeftLeg" type="Node3D" parent="SamModel"]
+position = Vector3(-0.24, 0.7, 0)
+
+[node name="Leg" type="MeshInstance3D" parent="SamModel/LeftLeg"]
+position = Vector3(0, -0.4, 0)
+material_override = SubResource("Material_pants")
+mesh = SubResource("Mesh_leg")
+
+[node name="Shoe" type="MeshInstance3D" parent="SamModel/LeftLeg"]
+position = Vector3(0, -0.82, -0.1)
+material_override = SubResource("Material_shoes")
+mesh = SubResource("Mesh_shoe")
+
+[node name="RightLeg" type="Node3D" parent="SamModel"]
+position = Vector3(0.24, 0.7, 0)
+
+[node name="Leg" type="MeshInstance3D" parent="SamModel/RightLeg"]
+position = Vector3(0, -0.4, 0)
+material_override = SubResource("Material_pants")
+mesh = SubResource("Mesh_leg")
+
+[node name="Shoe" type="MeshInstance3D" parent="SamModel/RightLeg"]
+position = Vector3(0, -0.82, -0.1)
+material_override = SubResource("Material_shoes")
+mesh = SubResource("Mesh_shoe")
+
+[node name="LeftDrawstring" type="MeshInstance3D" parent="SamModel"]
+position = Vector3(-0.08, 1.19, -0.43)
+rotation_degrees = Vector3(0, 0, 8)
+material_override = SubResource("Material_hoodie_trim")
+mesh = SubResource("Mesh_drawstring")
+
+[node name="RightDrawstring" type="MeshInstance3D" parent="SamModel"]
+position = Vector3(0.08, 1.19, -0.43)
+rotation_degrees = Vector3(0, 0, -8)
+material_override = SubResource("Material_hoodie_trim")
+mesh = SubResource("Mesh_drawstring")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries/ = SubResource("AnimationLibrary_sam")
+
+[node name="AnimationTree" type="AnimationTree" parent="."]
+unique_name_in_owner = true
+active = true
+tree_root = SubResource("Node_root_tree")
+anim_player = NodePath("../AnimationPlayer")
+parameters/StateMachine/Move/StepTimeScale/scale = 1.0
+parameters/StateMachine/Move/WalkRunBlending/blend_amount = 0.0
+parameters/AttackOneShot/request = 0

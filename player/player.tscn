@@ -4,7 +4,7 @@
 [ext_resource type="PackedScene" uid="uid://b2ew46dlu7u7x" path="res://player/grenade_launcher.tscn" id="3_54qc4"]
 [ext_resource type="Script" uid="uid://dwd8k7raa2k87" path="res://player/camera_controller.gd" id="3_qrkly"]
 [ext_resource type="Script" uid="uid://0nwful4fsrh8" path="res://player/melee_attack_area.gd" id="3_v1vve"]
-[ext_resource type="PackedScene" uid="uid://bdyptm7smjixm" path="res://player/gdbot/gdbot_skin.tscn" id="4_2ieo8"]
+[ext_resource type="PackedScene" path="res://player/sam/sam_skin.tscn" id="4_2ieo8"]
 [ext_resource type="PackedScene" uid="uid://dta8u77j4ye4v" path="res://player/coin/coin_visuals/coin_model.glb" id="7_2ieo8"]
 [ext_resource type="Script" uid="uid://dtf17612eybdg" path="res://player/coins_container.gd" id="7_8eehq"]
 [ext_resource type="Script" uid="uid://c3q655fuoyb17" path="res://player/coin/coin_visuals/coin_model.gd" id="8_ebec5"]
