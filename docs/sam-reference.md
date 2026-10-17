@@ -34,3 +34,11 @@ machine and uses the Quaternius Universal Base Characters male glTF as its
 human base. `player/sam/sam_skin.gd` applies the fitted clothing shader and
 relaxes the imported T-pose by posing both upper arms downward. No reference
 photos or scraped likeness assets are committed.
+
+## Visual review captures
+
+- [Front](screenshots/sam-front.png)
+- [45-degree](screenshots/sam-angle45.png)
+- [Side](screenshots/sam-side.png)
+- [Back](screenshots/sam-back.png)
+- [Operated in the actual game scene](screenshots/sam-gameplay.png)

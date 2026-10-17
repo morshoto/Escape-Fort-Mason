@@ -16,7 +16,7 @@ void fragment() {
 	float jacket_mask = smoothstep(0.68, 0.78, body_position.y)
 		* (1.0 - smoothstep(1.48, 1.6, body_position.y));
 	float center_mask = 1.0 - smoothstep(0.28, 0.48, abs(body_position.x));
-	float pants_mask = 1.0 - smoothstep(0.62, 0.8, body_position.y);
+	float pants_mask = 1.0 - smoothstep(0.86, 1.02, body_position.y);
 
 	color = mix(color, jacket_color.rgb, jacket_mask * 0.94);
 	color = mix(color, top_color.rgb, jacket_mask * center_mask * 0.42);
