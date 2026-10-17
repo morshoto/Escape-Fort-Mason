@@ -24,6 +24,28 @@ or model was downloaded or copied into this repository.
 - [News4JAX — DevDay coverage](https://www.news4jax.com/business/2026/09/29/openai-ceo-announces-new-ai-agent-and-avoids-mention-of-security-concerns-at-developer-conference/):
   provides event context and a stage-photo carousel, but no useful Alfred
   close-up; no character geometry was taken from it.
+- [SF Standard — OpenAI launches Dots](https://sfstandard.com/2026/09/29/openai-launches-dots/):
+  provides the clearest four-character silhouette summary: blue cloud, green
+  frog, yellow triangle, and pink heart.
+
+## Four-Dot visual mapping
+
+The official page labels the four sections Pink dot Iggy, Blue dot Felipe,
+Green dot Todd, and Yellow dot Alfred. The implementation keeps the descriptive
+variant names used by the scene and gallery while preserving those labels here
+for traceability.
+
+| Variant | Reference traits implemented | Scene visual root |
+| --- | --- | --- |
+| Blue / Felipe | Blue multi-lobe cloud body, black beret, small vertical black eyes | `BlueVisual` |
+| Green / Todd | Lime-green frog-like body, two raised white eyes, black pupils | `GreenVisual` |
+| Alfred | Yellow rounded triangle, round black glasses, black bow tie | `AlfredVisual` |
+| Pink / Iggy | Pink heart silhouette with two top lobes and large round black sunglasses | `PinkVisual` |
+
+These are original low-poly Godot meshes, not copied models or textures. The
+gallery uses the same `Dots` scene and only changes `visual_variant`, so all
+four variants retain the shared follow, bob, rotation, and movement-state
+controller.
 
 ## Selected variation and implementation
 
@@ -60,4 +82,14 @@ all views through a 640x640 `SubViewport`:
 - [45 degrees](dots-screenshots/alfred-45.png)
 - [side](dots-screenshots/alfred-side.png)
 - [back](dots-screenshots/alfred-back.png)
+- [Blue front](dots-screenshots/blue-front.png)
+- [Blue 45 degrees](dots-screenshots/blue-45.png)
+- [Blue side](dots-screenshots/blue-side.png)
+- [Green front](dots-screenshots/green-front.png)
+- [Green 45 degrees](dots-screenshots/green-45.png)
+- [Green side](dots-screenshots/green-side.png)
+- [Pink front](dots-screenshots/pink-front.png)
+- [Pink 45 degrees](dots-screenshots/pink-45.png)
+- [Pink side](dots-screenshots/pink-side.png)
+- [Four-Dot gallery](dots-screenshots/dots-gallery.png)
 - [Sam and Dots gameplay](dots-screenshots/dots-with-sam.png)
