@@ -4,6 +4,8 @@ const PLAYER_SCENE_PATH := "res://player/player.tscn"
 const SKIN_SCENE_PATH := "res://player/sam/sam_skin.tscn"
 const ROLLBACK_SCENE_PATH := "res://player/gdbot/gdbot_skin.tscn"
 const ASSET_DOC_PATH := "res://docs/ASSETS.md"
+const QUATERNIUS_MODEL_PATH := "res://player/sam/quaternius/Superhero_Male_FullBody.gltf"
+const QUATERNIUS_HAIR_PATH := "res://player/sam/quaternius/Hair_SimpleParted.gltf"
 const REQUIRED_ANIMATIONS := ["idle", "walk", "run", "jump", "fall", "attack"]
 const REQUIRED_METHODS := ["idle", "move", "jump", "fall", "attack"]
 
@@ -45,7 +47,7 @@ func _check_scene_contract() -> void:
 	for animation_name in REQUIRED_ANIMATIONS:
 		_require(animation_tree.get_animation(animation_name) != null, "skin has %s animation" % animation_name)
 
-	for visual_name in ["Head", "Hair", "Hoodie", "Glasses"]:
+	for visual_name in ["Face", "Hair", "Top", "Jacket", "QuaterniusModel"]:
 		_require(skin.has_node("SamModel/%s" % visual_name), "skin has %s visual marker" % visual_name)
 
 	skin.walk_run_blending = 0.75
@@ -79,9 +81,14 @@ func _check_rollback_skin() -> void:
 
 func _check_asset_provenance() -> void:
 	var asset_doc := FileAccess.get_file_as_string(ASSET_DOC_PATH)
-	_require(asset_doc.contains("locally authored"), "asset provenance identifies local authorship")
-	_require(asset_doc.contains("Godot primitive meshes"), "asset provenance identifies mesh source")
-	_require(asset_doc.contains("No third-party"), "asset provenance rules out unknown third-party assets")
+	_require(FileAccess.file_exists(QUATERNIUS_MODEL_PATH), "Quaternius male model is included")
+	_require(FileAccess.file_exists(QUATERNIUS_HAIR_PATH), "Quaternius parted hair is included")
+	_require(asset_doc.contains("Quaternius Universal Base Characters"), "asset provenance names Quaternius")
+	_require(asset_doc.contains("CC0"), "asset provenance records the CC0 license")
+	_require(asset_doc.contains("Sam Altman"), "asset provenance records the visual brief")
+	_require(asset_doc.contains("short dark hair"), "asset provenance records the hair cue")
+	_require(asset_doc.contains("muted blue"), "asset provenance records the clothing cue")
+	_require(asset_doc.contains("No reference photos"), "asset provenance excludes reference photos")
 
 
 func _require(condition: bool, description: String) -> void:
