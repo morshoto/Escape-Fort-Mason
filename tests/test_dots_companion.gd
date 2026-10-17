@@ -20,6 +20,7 @@ func _run() -> void:
 	_test_idle_bobbing_changes_height()
 	_test_movement_state_tracks_player_speed()
 	_test_visual_scene_has_no_collision_shape()
+	_test_fort_mason_scene_wires_dots()
 
 	if _failures.is_empty():
 		print("Dots companion tests passed")
@@ -139,6 +140,20 @@ func _test_visual_scene_has_no_collision_shape() -> void:
 	var collision_shapes := instance.find_children("*", "CollisionShape3D", true, false)
 	_assert(collision_shapes.is_empty(), "Dots visual should not add a collision shape")
 	instance.free()
+
+
+func _test_fort_mason_scene_wires_dots() -> void:
+	var scene := load("res://level/fort_mason.tscn") as PackedScene
+	_assert(scene != null, "Fort Mason scene should be loadable")
+	if scene == null:
+		return
+
+	var fort_mason := scene.instantiate()
+	var dots := fort_mason.get_node_or_null("Dots") as Dots
+	_assert(dots != null, "Fort Mason scene should include Dots")
+	if dots != null:
+		_assert(dots.target_path == NodePath("../Sam"), "Fort Mason Dots should target Sam")
+	fort_mason.free()
 
 
 func _assert(condition: bool, message: String) -> void:
