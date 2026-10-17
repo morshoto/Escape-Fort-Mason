@@ -35,6 +35,10 @@ func _test_dialogue_scene_contract() -> void:
 
 	var dialogue := scene.instantiate()
 	root.add_child(dialogue)
+	var camera := Camera3D.new()
+	camera.position = Vector3(0.0, 0.0, 8.0)
+	camera.current = true
+	root.add_child(camera)
 	await process_frame
 
 	var message := dialogue.get_node_or_null("Message") as Label3D
@@ -45,16 +49,23 @@ func _test_dialogue_scene_contract() -> void:
 		_assert(message.fixed_size, "Dialogue message should stay readable at distance")
 		_assert(message.outline_size > 0, "Dialogue message should have a readable outline")
 
+	var bubble_root := dialogue.get_node_or_null("Bubble") as Node3D
 	var bubble := dialogue.get_node_or_null("Bubble/Panel") as MeshInstance3D
+	_assert(bubble_root != null, "Dialogue UI should expose a speech bubble root")
 	_assert(bubble != null, "Dialogue UI should include a speech bubble panel")
 	if bubble != null:
 		var material := bubble.material_override as StandardMaterial3D
 		_assert(material != null, "Speech bubble should have a material")
 		if material != null:
 			_assert(material.billboard_mode == BaseMaterial3D.BILLBOARD_ENABLED, "Speech bubble should face the camera")
+		var near_scale: float = bubble_root.scale.x
+		camera.position.z = 16.0
+		await process_frame
+		_assert(bubble_root.scale.x > near_scale, "Speech bubble should scale for distant cameras")
 
 	_assert(dialogue.call("get_message") == "こんにちは、Sam！", "Dialogue UI should show the sample greeting")
 	dialogue.queue_free()
+	camera.queue_free()
 	await process_frame
 
 
@@ -98,6 +109,7 @@ func _test_debug_message_input() -> void:
 	dialogue.call("show_message", "別のセリフ")
 	var event := InputEventKey.new()
 	event.keycode = KEY_T
+	event.physical_keycode = KEY_T
 	event.pressed = true
 	dialogue._unhandled_input(event)
 	_assert(dialogue.call("get_message") == "こんにちは、Sam！", "T should restore the debug greeting")
