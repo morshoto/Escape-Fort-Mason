@@ -160,6 +160,10 @@ func _test_visual_scene_has_alfred_contract() -> void:
 				and body_material.albedo_color.b < 0.3,
 			"Alfred body should use a bright yellow material",
 		)
+		_assert(
+			body_material != null and body_material.emission_enabled,
+			"Alfred body should stay bright in dark scenes",
+		)
 
 	var glasses := visual_root.get_node_or_null("Glasses") as Node3D if visual_root != null else null
 	_assert(glasses != null, "Alfred glasses should exist")
