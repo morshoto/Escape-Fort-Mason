@@ -1,0 +1,78 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://player/dots/dots.gd" id="1_script"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_body"]
+albedo_color = Color(0.0784314, 0.643137, 0.717647, 1)
+metallic = 0.05
+roughness = 0.38
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_accent"]
+albedo_color = Color(1, 0.352941, 0.196078, 1)
+metallic = 0.02
+roughness = 0.45
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_eye"]
+albedo_color = Color(0.972549, 0.984314, 0.980392, 1)
+roughness = 0.25
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_pupil"]
+albedo_color = Color(0.0352941, 0.054902, 0.0784314, 1)
+roughness = 0.2
+
+[sub_resource type="SphereMesh" id="SphereMesh_body"]
+radius = 0.65
+height = 1.35
+radial_segments = 24
+rings = 16
+
+[sub_resource type="SphereMesh" id="SphereMesh_accent"]
+radius = 0.24
+height = 0.38
+radial_segments = 20
+rings = 12
+
+[sub_resource type="SphereMesh" id="SphereMesh_eye"]
+radius = 0.13
+height = 0.26
+radial_segments = 16
+rings = 10
+
+[sub_resource type="SphereMesh" id="SphereMesh_pupil"]
+radius = 0.055
+height = 0.11
+radial_segments = 12
+rings = 8
+
+[node name="Dots" type="Node3D"]
+script = ExtResource("1_script")
+
+[node name="Body" type="MeshInstance3D" parent="."]
+position = Vector3(0, 0.02, 0)
+mesh = SubResource("SphereMesh_body")
+material_override = SubResource("StandardMaterial3D_body")
+
+[node name="Accent" type="MeshInstance3D" parent="."]
+position = Vector3(0, 0.68, 0.04)
+mesh = SubResource("SphereMesh_accent")
+material_override = SubResource("StandardMaterial3D_accent")
+
+[node name="LeftEye" type="MeshInstance3D" parent="."]
+position = Vector3(-0.2, 0.2, -0.57)
+mesh = SubResource("SphereMesh_eye")
+material_override = SubResource("StandardMaterial3D_eye")
+
+[node name="RightEye" type="MeshInstance3D" parent="."]
+position = Vector3(0.2, 0.2, -0.57)
+mesh = SubResource("SphereMesh_eye")
+material_override = SubResource("StandardMaterial3D_eye")
+
+[node name="LeftPupil" type="MeshInstance3D" parent="."]
+position = Vector3(-0.2, 0.2, -0.68)
+mesh = SubResource("SphereMesh_pupil")
+material_override = SubResource("StandardMaterial3D_pupil")
+
+[node name="RightPupil" type="MeshInstance3D" parent="."]
+position = Vector3(0.2, 0.2, -0.68)
+mesh = SubResource("SphereMesh_pupil")
+material_override = SubResource("StandardMaterial3D_pupil")
