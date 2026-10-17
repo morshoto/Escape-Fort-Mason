@@ -9,7 +9,7 @@ var _cached_camera: Camera3D = null
 
 func _ready() -> void:
 	if not OS.is_debug_build():
-		free()
+		queue_free()
 
 	process_mode = PROCESS_MODE_ALWAYS
 	set_process(false)
