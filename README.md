@@ -23,6 +23,18 @@ project has an open Mac/Vulkan compatibility report.
 See [VERIFICATION.md](VERIFICATION.md) for the six-item local check list and
 its evidence.
 
+## GitHub Pages deployment
+
+Every push to `main`, including pull request merges, exports the `Web` preset
+and deploys the result to GitHub Pages:
+
+<https://morshoto.github.io/Escape-Fort-Mason/>
+
+The repository's Pages source must be set to **GitHub Actions** once in
+**Settings → Pages**. The workflow can also be started manually from the
+Actions tab. GitHub Pages must be available for the repository's visibility and
+plan; the current private-repository plan rejected the initial Pages setup.
+
 The current player visual is the locally authored Sam-inspired skin described
 in [docs/ASSETS.md](docs/ASSETS.md). The original GDbot skin remains available
 as a rollback/reference implementation.
