@@ -108,21 +108,25 @@ func _build_alfred_visuals() -> void:
 		return
 	_visuals_built = true
 	set_meta("visual_variant", "alfred")
+	var visual_root := Node3D.new()
+	visual_root.name = "AlfredVisual"
+	visual_root.rotation.y = PI
+	add_child(visual_root)
 
 	var body := MeshInstance3D.new()
 	body.name = "Body"
 	body.mesh = _create_body_mesh()
 	body.material_override = _make_material(ALFRED_YELLOW, 0.9)
-	add_child(body)
+	visual_root.add_child(body)
 
-	_build_glasses()
-	_build_bow_tie()
+	_build_glasses(visual_root)
+	_build_bow_tie(visual_root)
 
 
-func _build_glasses() -> void:
+func _build_glasses(parent: Node3D) -> void:
 	var glasses := Node3D.new()
 	glasses.name = "Glasses"
-	add_child(glasses)
+	parent.add_child(glasses)
 
 	var frame_mesh := TorusMesh.new()
 	frame_mesh.inner_radius = 0.13
@@ -180,10 +184,10 @@ func _build_glasses() -> void:
 		glasses.add_child(temple)
 
 
-func _build_bow_tie() -> void:
+func _build_bow_tie(parent: Node3D) -> void:
 	var bow_tie := Node3D.new()
 	bow_tie.name = "BowTie"
-	add_child(bow_tie)
+	parent.add_child(bow_tie)
 
 	var bow_material := _make_material(BOW_TIE_BLACK, 0.5)
 	for wing_data in [
