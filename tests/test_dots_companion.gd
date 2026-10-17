@@ -140,7 +140,11 @@ func _test_visual_scene_has_alfred_contract() -> void:
 	root.add_child(instance)
 	await process_frame
 
-	var body := instance.get_node_or_null("Body") as MeshInstance3D
+	var visual_root := instance.get_node_or_null("AlfredVisual") as Node3D
+	_assert(visual_root != null, "Alfred visual group should exist")
+	if visual_root != null:
+		_assert(abs(abs(visual_root.rotation.y) - PI) < 0.01, "Alfred visual should face the player frame")
+	var body := visual_root.get_node_or_null("Body") as MeshInstance3D if visual_root != null else null
 	_assert(body != null, "Alfred body should exist")
 	if body != null:
 		_assert(body.mesh is ArrayMesh, "Alfred body should use a custom mesh")
@@ -157,7 +161,7 @@ func _test_visual_scene_has_alfred_contract() -> void:
 			"Alfred body should use a bright yellow material",
 		)
 
-	var glasses := instance.get_node_or_null("Glasses") as Node3D
+	var glasses := visual_root.get_node_or_null("Glasses") as Node3D if visual_root != null else null
 	_assert(glasses != null, "Alfred glasses should exist")
 	if glasses != null:
 		_assert(glasses.get_node_or_null("LeftFrame") is MeshInstance3D, "Left round glasses frame should exist")
@@ -169,7 +173,7 @@ func _test_visual_scene_has_alfred_contract() -> void:
 		_assert(glasses.get_node_or_null("LeftEye") is MeshInstance3D, "Left simple eye should exist")
 		_assert(glasses.get_node_or_null("RightEye") is MeshInstance3D, "Right simple eye should exist")
 
-	var bow_tie := instance.get_node_or_null("BowTie") as Node3D
+	var bow_tie := visual_root.get_node_or_null("BowTie") as Node3D if visual_root != null else null
 	_assert(bow_tie != null, "Alfred bow tie should exist")
 	if bow_tie != null:
 		_assert(bow_tie.get_node_or_null("LeftWing") is MeshInstance3D, "Left bow tie wing should exist")
