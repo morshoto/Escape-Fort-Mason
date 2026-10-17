@@ -92,6 +92,7 @@ func _build_warehouse() -> void:
 	_add_box(warehouse, "BackWall", Vector3(21.0, 5.0, 0.5), Vector3(0.0, 2.5, -19.75), wall_material)
 	_add_box(warehouse, "WestFrontWing", Vector3(7.0, 5.0, 0.5), Vector3(-7.0, 2.5, -4.25), wall_material)
 	_add_box(warehouse, "EastFrontWing", Vector3(7.0, 5.0, 0.5), Vector3(7.0, 2.5, -4.25), wall_material)
+	_add_box(warehouse, "RoofPanel", Vector3(21.0, 0.18, 16.0), Vector3(0.0, 5.15, -12.0), _material("roof", METAL), false)
 
 	var roof_frame := Node3D.new()
 	roof_frame.name = "RoofFrame"
