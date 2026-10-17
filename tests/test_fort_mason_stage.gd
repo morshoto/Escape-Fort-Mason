@@ -70,6 +70,16 @@ func _run() -> void:
 			sam.test_move(sam.global_transform, Vector3.DOWN * 2.0),
 			"Sam has ground collision at the outdoor spawn",
 		)
+		var entrance_transform := Transform3D(Basis.IDENTITY, Vector3(0.0, 1.0, 4.0))
+		_check(
+			not sam.test_move(entrance_transform, Vector3(0.0, 0.0, -7.0)),
+			"Warehouse entrance remains traversable",
+		)
+		var indoor_transform := Transform3D(Basis.IDENTITY, Vector3(0.0, 1.0, -12.0))
+		_check(
+			sam.test_move(indoor_transform, Vector3.DOWN * 2.0),
+			"Sam has ground collision inside the warehouse",
+		)
 		var wall_test_transform := Transform3D(Basis.IDENTITY, Vector3(0.0, 1.0, -12.0))
 		_check(
 			sam.test_move(wall_test_transform, Vector3.LEFT * 20.0),
