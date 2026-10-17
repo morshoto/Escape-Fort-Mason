@@ -4,6 +4,27 @@
 [ext_resource type="PackedScene" path="res://player/sam/quaternius/Superhero_Male_FullBody.gltf" id="2_quaternius_model"]
 [ext_resource type="PackedScene" path="res://player/sam/quaternius/Hair_SimpleParted.gltf" id="3_quaternius_hair"]
 
+[sub_resource type="BoxMesh" id="Mesh_jacket_shell"]
+size = Vector3(0.34, 0.36, 0.035)
+
+[sub_resource type="StandardMaterial3D" id="Material_jacket_shell"]
+albedo_color = Color(0.045, 0.075, 0.12, 1)
+metallic = 0.05
+roughness = 0.8
+
+[sub_resource type="BoxMesh" id="Mesh_jacket_panel"]
+size = Vector3(0.06, 0.34, 0.018)
+
+[sub_resource type="StandardMaterial3D" id="Material_jacket_panel"]
+albedo_color = Color(0.22, 0.38, 0.52, 1)
+roughness = 0.78
+
+[sub_resource type="BoxMesh" id="Mesh_jacket_collar"]
+size = Vector3(0.28, 0.045, 0.055)
+
+[sub_resource type="BoxMesh" id="Mesh_jacket_hem"]
+size = Vector3(0.34, 0.035, 0.04)
+
 [sub_resource type="Animation" id="Animation_reset"]
 length = 0.001
 tracks/0/type = "value"
@@ -18,55 +39,6 @@ tracks/0/keys = {
 "update": 0,
 "values": [Vector3(0, 0, 0)]
 }
-tracks/1/type = "value"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath("SamModel/LeftArm:rotation_degrees")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector3(0, 0, 0)]
-}
-tracks/2/type = "value"
-tracks/2/imported = false
-tracks/2/enabled = true
-tracks/2/path = NodePath("SamModel/RightArm:rotation_degrees")
-tracks/2/interp = 1
-tracks/2/loop_wrap = true
-tracks/2/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector3(0, 0, 0)]
-}
-tracks/3/type = "value"
-tracks/3/imported = false
-tracks/3/enabled = true
-tracks/3/path = NodePath("SamModel/LeftLeg:rotation_degrees")
-tracks/3/interp = 1
-tracks/3/loop_wrap = true
-tracks/3/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector3(0, 0, 0)]
-}
-tracks/4/type = "value"
-tracks/4/imported = false
-tracks/4/enabled = true
-tracks/4/path = NodePath("SamModel/RightLeg:rotation_degrees")
-tracks/4/interp = 1
-tracks/4/loop_wrap = true
-tracks/4/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector3(0, 0, 0)]
-}
-
 [sub_resource type="Animation" id="Animation_idle"]
 resource_name = "idle"
 length = 2.4
@@ -83,31 +55,6 @@ tracks/0/keys = {
 "update": 0,
 "values": [Vector3(0, 0, 0), Vector3(0, 0.025, 0), Vector3(0, 0, 0)]
 }
-tracks/1/type = "value"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath("SamModel/LeftArm:rotation_degrees")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"times": PackedFloat32Array(0, 1.2, 2.4),
-"transitions": PackedFloat32Array(1, 1, 1),
-"update": 0,
-"values": [Vector3(0, 0, 5), Vector3(0, 0, 2), Vector3(0, 0, 5)]
-}
-tracks/2/type = "value"
-tracks/2/imported = false
-tracks/2/enabled = true
-tracks/2/path = NodePath("SamModel/RightArm:rotation_degrees")
-tracks/2/interp = 1
-tracks/2/loop_wrap = true
-tracks/2/keys = {
-"times": PackedFloat32Array(0, 1.2, 2.4),
-"transitions": PackedFloat32Array(1, 1, 1),
-"update": 0,
-"values": [Vector3(0, 0, -5), Vector3(0, 0, -2), Vector3(0, 0, -5)]
-}
-
 [sub_resource type="Animation" id="Animation_walk"]
 resource_name = "walk"
 length = 0.8
@@ -124,61 +71,13 @@ tracks/0/keys = {
 "update": 0,
 "values": [Vector3(0, 0, 0), Vector3(0, 0.06, 0), Vector3(0, 0, 0)]
 }
-tracks/1/type = "value"
+tracks/1/type = "method"
 tracks/1/imported = false
 tracks/1/enabled = true
-tracks/1/path = NodePath("SamModel/LeftArm:rotation_degrees")
+tracks/1/path = NodePath(".")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
-"times": PackedFloat32Array(0, 0.4, 0.8),
-"transitions": PackedFloat32Array(1, 1, 1),
-"update": 0,
-"values": [Vector3(-28, 0, 5), Vector3(28, 0, 5), Vector3(-28, 0, 5)]
-}
-tracks/2/type = "value"
-tracks/2/imported = false
-tracks/2/enabled = true
-tracks/2/path = NodePath("SamModel/RightArm:rotation_degrees")
-tracks/2/interp = 1
-tracks/2/loop_wrap = true
-tracks/2/keys = {
-"times": PackedFloat32Array(0, 0.4, 0.8),
-"transitions": PackedFloat32Array(1, 1, 1),
-"update": 0,
-"values": [Vector3(28, 0, -5), Vector3(-28, 0, -5), Vector3(28, 0, -5)]
-}
-tracks/3/type = "value"
-tracks/3/imported = false
-tracks/3/enabled = true
-tracks/3/path = NodePath("SamModel/LeftLeg:rotation_degrees")
-tracks/3/interp = 1
-tracks/3/loop_wrap = true
-tracks/3/keys = {
-"times": PackedFloat32Array(0, 0.4, 0.8),
-"transitions": PackedFloat32Array(1, 1, 1),
-"update": 0,
-"values": [Vector3(25, 0, 0), Vector3(-25, 0, 0), Vector3(25, 0, 0)]
-}
-tracks/4/type = "value"
-tracks/4/imported = false
-tracks/4/enabled = true
-tracks/4/path = NodePath("SamModel/RightLeg:rotation_degrees")
-tracks/4/interp = 1
-tracks/4/loop_wrap = true
-tracks/4/keys = {
-"times": PackedFloat32Array(0, 0.4, 0.8),
-"transitions": PackedFloat32Array(1, 1, 1),
-"update": 0,
-"values": [Vector3(-25, 0, 0), Vector3(25, 0, 0), Vector3(-25, 0, 0)]
-}
-tracks/5/type = "method"
-tracks/5/imported = false
-tracks/5/enabled = true
-tracks/5/path = NodePath(".")
-tracks/5/interp = 1
-tracks/5/loop_wrap = true
-tracks/5/keys = {
 "times": PackedFloat32Array(0.2, 0.6),
 "transitions": PackedFloat32Array(1, 1),
 "values": [{"args": [], "method": &"emit_step"}, {"args": [], "method": &"emit_step"}]
@@ -200,61 +99,13 @@ tracks/0/keys = {
 "update": 0,
 "values": [Vector3(0, 0, 0), Vector3(0, 0.1, 0), Vector3(0, 0, 0)]
 }
-tracks/1/type = "value"
+tracks/1/type = "method"
 tracks/1/imported = false
 tracks/1/enabled = true
-tracks/1/path = NodePath("SamModel/LeftArm:rotation_degrees")
+tracks/1/path = NodePath(".")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
-"times": PackedFloat32Array(0, 0.275, 0.55),
-"transitions": PackedFloat32Array(1, 1, 1),
-"update": 0,
-"values": [Vector3(-46, 0, 8), Vector3(46, 0, 8), Vector3(-46, 0, 8)]
-}
-tracks/2/type = "value"
-tracks/2/imported = false
-tracks/2/enabled = true
-tracks/2/path = NodePath("SamModel/RightArm:rotation_degrees")
-tracks/2/interp = 1
-tracks/2/loop_wrap = true
-tracks/2/keys = {
-"times": PackedFloat32Array(0, 0.275, 0.55),
-"transitions": PackedFloat32Array(1, 1, 1),
-"update": 0,
-"values": [Vector3(46, 0, -8), Vector3(-46, 0, -8), Vector3(46, 0, -8)]
-}
-tracks/3/type = "value"
-tracks/3/imported = false
-tracks/3/enabled = true
-tracks/3/path = NodePath("SamModel/LeftLeg:rotation_degrees")
-tracks/3/interp = 1
-tracks/3/loop_wrap = true
-tracks/3/keys = {
-"times": PackedFloat32Array(0, 0.275, 0.55),
-"transitions": PackedFloat32Array(1, 1, 1),
-"update": 0,
-"values": [Vector3(38, 0, 0), Vector3(-38, 0, 0), Vector3(38, 0, 0)]
-}
-tracks/4/type = "value"
-tracks/4/imported = false
-tracks/4/enabled = true
-tracks/4/path = NodePath("SamModel/RightLeg:rotation_degrees")
-tracks/4/interp = 1
-tracks/4/loop_wrap = true
-tracks/4/keys = {
-"times": PackedFloat32Array(0, 0.275, 0.55),
-"transitions": PackedFloat32Array(1, 1, 1),
-"update": 0,
-"values": [Vector3(-38, 0, 0), Vector3(38, 0, 0), Vector3(-38, 0, 0)]
-}
-tracks/5/type = "method"
-tracks/5/imported = false
-tracks/5/enabled = true
-tracks/5/path = NodePath(".")
-tracks/5/interp = 1
-tracks/5/loop_wrap = true
-tracks/5/keys = {
 "times": PackedFloat32Array(0.14, 0.42),
 "transitions": PackedFloat32Array(1, 1),
 "values": [{"args": [], "method": &"emit_step"}, {"args": [], "method": &"emit_step"}]
@@ -263,59 +114,11 @@ tracks/5/keys = {
 [sub_resource type="Animation" id="Animation_jump"]
 resource_name = "jump"
 length = 0.45
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("SamModel/LeftArm:rotation_degrees")
-tracks/0/interp = 1
-tracks/0/loop_wrap = false
-tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.45),
-"transitions": PackedFloat32Array(1, 1),
-"update": 0,
-"values": [Vector3(0, 0, 5), Vector3(-28, 0, 5)]
-}
-tracks/1/type = "value"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath("SamModel/RightArm:rotation_degrees")
-tracks/1/interp = 1
-tracks/1/loop_wrap = false
-tracks/1/keys = {
-"times": PackedFloat32Array(0, 0.45),
-"transitions": PackedFloat32Array(1, 1),
-"update": 0,
-"values": [Vector3(0, 0, -5), Vector3(-28, 0, -5)]
-}
 
 [sub_resource type="Animation" id="Animation_fall"]
 resource_name = "fall"
 length = 0.6
 loop_mode = 1
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("SamModel/LeftArm:rotation_degrees")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.3, 0.6),
-"transitions": PackedFloat32Array(1, 1, 1),
-"update": 0,
-"values": [Vector3(-18, 0, 30), Vector3(-12, 0, 30), Vector3(-18, 0, 30)]
-}
-tracks/1/type = "value"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath("SamModel/RightArm:rotation_degrees")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"times": PackedFloat32Array(0, 0.3, 0.6),
-"transitions": PackedFloat32Array(1, 1, 1),
-"update": 0,
-"values": [Vector3(-18, 0, -30), Vector3(-12, 0, -30), Vector3(-18, 0, -30)]
-}
 
 [sub_resource type="Animation" id="Animation_attack"]
 resource_name = "attack"
@@ -323,22 +126,10 @@ length = 0.35
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("SamModel/RightArm:rotation_degrees")
+tracks/0/path = NodePath("SamModel:rotation_degrees")
 tracks/0/interp = 1
 tracks/0/loop_wrap = false
 tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.12, 0.35),
-"transitions": PackedFloat32Array(1, 0.5, 1),
-"update": 0,
-"values": [Vector3(0, 0, -5), Vector3(-75, 0, -5), Vector3(-15, 0, -5)]
-}
-tracks/1/type = "value"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath("SamModel:rotation_degrees")
-tracks/1/interp = 1
-tracks/1/loop_wrap = false
-tracks/1/keys = {
 "times": PackedFloat32Array(0, 0.12, 0.35),
 "transitions": PackedFloat32Array(1, 0.5, 1),
 "update": 0,
@@ -466,21 +257,29 @@ script = ExtResource("1_sam")
 
 [node name="Jacket" type="Node3D" parent="SamModel"]
 
+[node name="JacketShell" type="MeshInstance3D" parent="SamModel/Jacket"]
+position = Vector3(0, 1.31, 0.16)
+mesh = SubResource("Mesh_jacket_shell")
+material_override = SubResource("Material_jacket_shell")
+
+[node name="JacketFrontPanel" type="MeshInstance3D" parent="SamModel/Jacket"]
+position = Vector3(0, 1.31, 0.19)
+mesh = SubResource("Mesh_jacket_panel")
+material_override = SubResource("Material_jacket_panel")
+
+[node name="JacketCollar" type="MeshInstance3D" parent="SamModel/Jacket"]
+position = Vector3(0, 1.5, 0.18)
+mesh = SubResource("Mesh_jacket_collar")
+material_override = SubResource("Material_jacket_shell")
+
+[node name="JacketHem" type="MeshInstance3D" parent="SamModel/Jacket"]
+position = Vector3(0, 1.12, 0.18)
+mesh = SubResource("Mesh_jacket_hem")
+material_override = SubResource("Material_jacket_shell")
+
 [node name="Top" type="Node3D" parent="SamModel"]
 
 [node name="Head" type="Node3D" parent="SamModel"]
-
-[node name="LeftArm" type="Node3D" parent="SamModel"]
-position = Vector3(-0.55, 1.4, 0)
-
-[node name="RightArm" type="Node3D" parent="SamModel"]
-position = Vector3(0.55, 1.4, 0)
-
-[node name="LeftLeg" type="Node3D" parent="SamModel"]
-position = Vector3(-0.24, 0.7, 0)
-
-[node name="RightLeg" type="Node3D" parent="SamModel"]
-position = Vector3(0.24, 0.7, 0)
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 libraries/ = SubResource("AnimationLibrary_sam")

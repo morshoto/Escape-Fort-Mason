@@ -57,11 +57,15 @@ func _check_scene_contract() -> void:
 		_require(skeleton.find_bone(bone_name) != -1, "skin has %s Humanoid bone" % bone_name)
 	_require(skeleton.get_bone_pose_scale(skeleton.find_bone("Head")).x > 1.0, "natural proportions enlarge the head")
 	_require(skeleton.get_bone_pose_scale(skeleton.find_bone("clavicle_l")).x < 1.0, "natural proportions narrow the shoulders")
-	_require(_animation_targets_skeleton(animation_tree.get_animation("walk")), "walk targets the imported Skeleton3D")
-	_require(_animation_targets_skeleton(animation_tree.get_animation("run")), "run targets the imported Skeleton3D")
+	var animation_player := skin.get_node("AnimationPlayer") as AnimationPlayer
+	_require(_animation_targets_skeleton(animation_player.get_animation("humanoid_walk")), "walk retarget preview targets the imported Skeleton3D")
+	_require(_animation_targets_skeleton(animation_player.get_animation("humanoid_run")), "run retarget preview targets the imported Skeleton3D")
 
 	for visual_name in ["Face", "Hair", "Top", "Jacket", "QuaterniusModel"]:
 		_require(skin.has_node("SamModel/%s" % visual_name), "skin has %s visual marker" % visual_name)
+	for garment_name in ["Jacket/JacketShell", "Jacket/JacketFrontPanel"]:
+		var garment := skin.get_node("SamModel/%s" % garment_name) as MeshInstance3D
+		_require(garment != null and garment.mesh != null, "skin has fitted %s garment mesh" % garment_name)
 
 	skin.walk_run_blending = 0.75
 	_require(is_equal_approx(skin.walk_run_blending, 0.75), "walk/run blend is writable")

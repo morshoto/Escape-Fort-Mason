@@ -31,9 +31,10 @@ uses shared cues instead of one frozen pose.
 
 `player/sam/sam_skin.tscn` keeps the shared `CharacterSkin` animation state
 machine and uses the Quaternius Universal Base Characters male glTF as its
-human base. `player/sam/sam_skin.gd` applies the fitted clothing shader and
-relaxes the imported T-pose by posing both upper arms downward. No reference
-photos or scraped likeness assets are committed.
+human base. The scene adds a fitted jacket shell/front panel mesh, while
+`player/sam/sam_skin.gd` applies the clothing materials, narrows the imported
+proportions, and retargets the active state to the Humanoid `Skeleton3D` bones.
+No reference photos or scraped likeness assets are committed.
 
 ## Visual review captures
 
