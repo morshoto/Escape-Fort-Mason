@@ -1,3 +1,6 @@
+# Ignore the project plan file
+PLAN.md
+
 # Godot 4.2+ specific ignores
 ~*.dll
 
@@ -26,3 +29,8 @@ build/
 *.exe
 # Uncomment if your project does not version PCK files as runtime dependencies.
 # *.pck
+
+# Ignore environment variable files
+.env
+.env.local
+.env.*.local    
