@@ -57,6 +57,8 @@ func _test_dialogue_scene_contract() -> void:
 	_assert(bubble != null, "Dialogue UI should include a speech bubble panel")
 	_assert(not dialogue.visible, "Dialogue UI should start hidden until Dots speaks")
 	if bubble != null:
+		_assert(is_equal_approx(bubble.position.y, float(dialogue.get("bubble_anchor_height"))), "Speech panel should align with its screen-clamped anchor")
+	if bubble != null:
 		dialogue.call("show_message", "拡大縮小テスト")
 		var material := bubble.material_override as StandardMaterial3D
 		_assert(material != null, "Speech bubble should have a material")
