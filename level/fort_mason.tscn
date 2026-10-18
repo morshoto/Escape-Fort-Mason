@@ -1,9 +1,10 @@
-[gd_scene load_steps=5 format=3]
+[gd_scene load_steps=6 format=3]
 
 [ext_resource type="Script" path="res://level/fort_mason.gd" id="1_fort_mason"]
 [ext_resource type="PackedScene" uid="uid://ciqrpd5675boy" path="res://player/player.tscn" id="2_player"]
 [ext_resource type="PackedScene" path="res://player/dots/dots.tscn" id="3_dots"]
-[ext_resource type="PackedScene" path="res://level/controls_hint.tscn" id="4_controls_hint"]
+[ext_resource type="Script" path="res://gameplay/game_progress.gd" id="4_game_progress"]
+[ext_resource type="PackedScene" path="res://level/controls_hint.tscn" id="5_controls_hint"]
 
 [node name="FortMason" type="Node3D"]
 script = ExtResource("1_fort_mason")
@@ -23,8 +24,11 @@ position = Vector3(0, 1, 12)
 [node name="Dots" parent="." instance=ExtResource("3_dots")]
 target_path = NodePath("../Sam")
 
-[node name="ControlsHint" parent="." instance=ExtResource("4_controls_hint")]
-
 [node name="OutdoorPlaza" type="Node3D" parent="."]
 
 [node name="WarehouseInterior" type="Node3D" parent="."]
+
+[node name="GameProgress" type="Node" parent="."]
+script = ExtResource("4_game_progress")
+
+[node name="ControlsHint" parent="." instance=ExtResource("5_controls_hint")]

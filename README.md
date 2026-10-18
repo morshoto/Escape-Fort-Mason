@@ -7,6 +7,15 @@ Godot 4 third-person controller demo:
 
 ## Run locally
 
+On a fresh checkout, import the assets and register the project's global
+scripts once before launching the main scene:
+
+```sh
+godot --headless --path . --editor --quit
+```
+
+Then start the game:
+
 ```sh
 godot --path .
 ```
@@ -15,11 +24,11 @@ Controls are configured in `project.godot`: WASD moves, Space jumps, the mouse
 aims/attacks, Tab swaps weapons, Escape pauses, and T shows Dots' sample
 dialogue.
 
-The imported baseline was tested with Godot 4.7.2 using both editor/import
-initialization and a headless main-scene launch. See `LICENSE` for the source
-and art licensing terms from the upstream project. This local copy selects
-Godot's compatibility renderer for Apple Silicon/macOS because the upstream
-project has an open Mac/Vulkan compatibility report.
+The imported baseline was tested with Godot 4.7.2 using the import step above
+and a headless main-scene launch. See `LICENSE` for the source and art
+licensing terms from the upstream project. This local copy selects Godot's
+compatibility renderer for Apple Silicon/macOS because the upstream project
+has an open Mac/Vulkan compatibility report.
 
 See [VERIFICATION.md](VERIFICATION.md) for the six-item local check list and
 its evidence.
