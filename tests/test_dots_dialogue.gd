@@ -49,7 +49,7 @@ func _test_dialogue_scene_contract() -> void:
 		_assert(message.billboard == BaseMaterial3D.BILLBOARD_ENABLED, "Dialogue message should face the camera")
 		_assert(message.fixed_size, "Dialogue message should stay readable at distance")
 		_assert(message.outline_size > 0, "Dialogue message should have a readable outline")
-		_assert(message.font_size <= 32, "Dialogue text should use a compact readable font size")
+		_assert(message.font_size <= 26, "Dialogue text should use a compact readable font size")
 
 	var bubble_root := dialogue.get_node_or_null("Bubble") as Node3D
 	var bubble := dialogue.get_node_or_null("Bubble/Panel") as MeshInstance3D
@@ -65,7 +65,9 @@ func _test_dialogue_scene_contract() -> void:
 		var panel_mesh := bubble.mesh as QuadMesh
 		_assert(panel_mesh != null, "Speech bubble panel should use a QuadMesh")
 		if panel_mesh != null:
-			_assert(panel_mesh.size.x <= 3.0 and panel_mesh.size.y <= 1.1, "Speech bubble panel should be compact")
+			_assert(panel_mesh.size.x <= 2.6 and panel_mesh.size.y <= 0.95, "Speech bubble panel should be compact")
+		var horizontal_offset = dialogue.get("bubble_horizontal_offset")
+		_assert(horizontal_offset != null and float(horizontal_offset) >= 1.6, "Dialogue should sit to the side of Dots")
 		var near_scale: float = bubble_root.scale.x
 		camera.position.z = 16.0
 		await process_frame
@@ -170,13 +172,28 @@ func _test_dialogue_safe_screen_margin() -> void:
 	await process_frame
 	dialogue.call("show_message", "画面端のテスト")
 	dialogue._process(1.0 / 60.0)
-	var bubble_anchor: Vector3 = dialogue.global_position + Vector3(0.0, 1.7, 0.0)
+	var horizontal_offset_value := 0.0
+	var horizontal_offset = dialogue.get("bubble_horizontal_offset")
+	if horizontal_offset != null:
+		horizontal_offset_value = horizontal_offset
+	var bubble_anchor_height := 0.0
+	var configured_anchor_height = dialogue.get("bubble_anchor_height")
+	if configured_anchor_height != null:
+		bubble_anchor_height = configured_anchor_height
+	var bubble_anchor: Vector3 = dialogue.global_position + camera.global_basis.x * horizontal_offset_value + Vector3(0.0, bubble_anchor_height, 0.0)
 	var screen_position := camera.unproject_position(bubble_anchor)
 	var viewport_size := get_root().get_visible_rect().size
 	_assert(screen_position.x >= viewport_size.x * 0.08, "Dialogue should stay inside the left screen margin")
 	_assert(screen_position.x <= viewport_size.x * 0.92 + 2.0, "Dialogue should stay inside the right screen margin")
 	_assert(screen_position.y >= viewport_size.y * 0.1, "Dialogue should stay inside the top screen margin")
 	_assert(screen_position.y <= viewport_size.y * 0.9, "Dialogue should stay inside the bottom screen margin")
+	var panel := dialogue.get_node("Bubble/Panel") as MeshInstance3D
+	var panel_mesh := panel.mesh as QuadMesh
+	var half_panel_width: float = panel_mesh.size.x * dialogue.get_node("Bubble").scale.x * 0.5
+	var left_edge := camera.unproject_position(bubble_anchor - camera.global_basis.x * half_panel_width)
+	var right_edge := camera.unproject_position(bubble_anchor + camera.global_basis.x * half_panel_width)
+	_assert(left_edge.x >= viewport_size.x * 0.04, "Speech bubble panel should stay inside the left screen margin")
+	_assert(right_edge.x <= viewport_size.x * 0.96, "Speech bubble panel should stay inside the right screen margin")
 	anchor.queue_free()
 	camera.queue_free()
 	await process_frame
