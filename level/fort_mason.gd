@@ -46,7 +46,7 @@ func _configure_night_environment() -> void:
 func _build_outdoor_plaza() -> void:
 	var outdoor := $OutdoorPlaza as Node3D
 	_add_box(outdoor, "Ground", Vector3(30.0, 0.4, 28.0), Vector3(0.0, -0.2, 11.5), _material("outdoor_ground", OUTDOOR_GROUND))
-	_add_box(outdoor, "NorthSeawall", Vector3(30.0, 1.2, 0.4), Vector3(0.0, 0.6, 25.3), _material("seawall", METAL))
+	_add_box(outdoor, "NorthSeawall", Vector3(30.0, 1.6, 0.4), Vector3(0.0, 0.8, 25.3), _material("seawall", METAL))
 	_add_box(outdoor, "WestBoundary", Vector3(0.4, 2.0, 28.0), Vector3(-15.0, 1.0, 11.5), _material("boundary", METAL))
 	_add_box(outdoor, "EastBoundary", Vector3(0.4, 2.0, 28.0), Vector3(15.0, 1.0, 11.5), _material("boundary", METAL))
 

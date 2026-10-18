@@ -86,6 +86,14 @@ func _run() -> void:
 		stage.get_node_or_null("OutdoorPlaza/BayWater") is MeshInstance3D,
 		"Bay water is represented",
 	)
+	var seawall_visual := stage.get_node_or_null("OutdoorPlaza/NorthSeawall/Visual") as MeshInstance3D
+	if seawall_visual != null and seawall_visual.mesh is BoxMesh:
+		_check(
+			(seawall_visual.mesh as BoxMesh).size.y >= 1.5,
+			"North seawall is high enough to contain Sam's jump",
+		)
+	else:
+		_check(false, "North seawall has measurable collision geometry")
 	_check(
 		stage.get_node_or_null("OutdoorPlaza/BayBridge") is Node3D,
 		"Bay bridge silhouette is represented",
@@ -144,6 +152,7 @@ func _run() -> void:
 			sam.test_move(wall_test_transform, Vector3.LEFT * 20.0),
 			"Warehouse side wall blocks traversal",
 		)
+		await _test_north_seawall(sam)
 
 	var provenance_path := "res://docs/fort-mason-assets.md"
 	_check(FileAccess.file_exists(provenance_path), "Asset provenance document exists")
@@ -158,6 +167,32 @@ func _run() -> void:
 	)
 
 	_finish()
+
+
+func _test_north_seawall(sam: CharacterBody3D) -> void:
+	for _frame in range(90):
+		await physics_frame
+		if sam.is_on_floor():
+			break
+	_check(sam.is_on_floor(), "Sam should settle on the plaza before the boundary check")
+	sam.global_position = Vector3(0.0, 0.0, 23.2)
+	sam.velocity = Vector3.ZERO
+	for _frame in range(90):
+		await physics_frame
+		if sam.is_on_floor():
+			break
+	_check(sam.is_on_floor(), "Sam should settle beside the north seawall before the jump")
+	Input.action_press("move_down")
+	Input.action_press("jump")
+	for frame in range(60):
+		await physics_frame
+		if frame == 0:
+			Input.action_release("jump")
+	Input.action_release("move_down")
+	_check(
+		sam.global_position.z < 25.5 and sam.is_on_floor(),
+		"Jumping toward the north seawall should keep Sam on the playable plaza",
+	)
 
 
 func _check(condition: bool, description: String) -> void:
