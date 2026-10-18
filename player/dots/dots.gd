@@ -18,14 +18,14 @@ enum MovementState {
 	RUN,
 }
 
-## Player-relative position: right, above, and behind the player.
-@export var follow_offset := Vector3(1.8, 1.25, 1.8)
+## Player-relative position: beside the player at chest height.
+@export var follow_offset := Vector3(1.15, 0.62, 0.0)
 ## Larger values make the companion catch up more quickly.
 @export_range(0.1, 30.0, 0.1) var follow_speed := 8.0
 ## Larger values make the companion turn more quickly.
 @export_range(0.1, 30.0, 0.1) var rotation_speed := 10.0
 ## Vertical idle motion in world units.
-@export_range(0.0, 1.0, 0.01) var bob_height := 0.2
+@export_range(0.0, 1.0, 0.01) var bob_height := 0.15
 ## Vertical idle motion frequency.
 @export_range(0.0, 10.0, 0.1) var bob_speed := 2.0
 ## Horizontal speed below this value is treated as idle.

@@ -66,7 +66,7 @@ func _test_dots_variant_scale_and_follow_offset() -> void:
 		dots.set_target(target)
 		await process_frame
 		var visual_root := dots.get_child(0) as Node3D
-		var bounds := _mesh_bounds_in(visual_root, visual_root)
+		var bounds := _mesh_bounds_in(visual_root, dots)
 		_assert(
 			bounds.size.y >= 0.85 and bounds.size.y <= 1.25,
 			"Dots variant %s should be compact beside Sam (measured %.3fm)"

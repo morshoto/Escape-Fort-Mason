@@ -351,6 +351,7 @@ static func _make_visual_root(parent: Node3D, name: String) -> Node3D:
 	var visual_root := Node3D.new()
 	visual_root.name = name
 	visual_root.rotation.y = PI
+	visual_root.scale = Vector3.ONE * 0.72
 	parent.add_child(visual_root)
 	return visual_root
 
