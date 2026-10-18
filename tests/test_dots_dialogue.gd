@@ -47,6 +47,14 @@ func _test_dialogue_scene_contract() -> void:
 	_assert(message != null, "Dialogue UI should expose a Label3D message")
 	if message != null:
 		_assert(message.font != null, "Dialogue message should use a bundled font")
+		var font_variation := message.font as FontVariation
+		_assert(font_variation != null, "Japanese dialogue should use a heavier variable font weight")
+		if font_variation != null:
+			var weight_tag := TextServerManager.get_primary_interface().name_to_tag("wght")
+			_assert(
+				float(font_variation.variation_opentype.get(weight_tag, 0.0)) >= 700.0,
+				"Japanese dialogue should use a bold weight for dark-scene readability",
+			)
 		_assert(message.billboard == BaseMaterial3D.BILLBOARD_ENABLED, "Dialogue message should face the camera")
 		_assert(message.fixed_size, "Dialogue message should stay readable at distance")
 		_assert(message.outline_size > 0, "Dialogue message should have a readable outline")

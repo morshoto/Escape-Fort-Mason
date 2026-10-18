@@ -24,11 +24,25 @@ var _home_local_position := Vector3.ZERO
 
 func _ready() -> void:
 	_home_local_position = position
+	_apply_readable_font_weight()
 	_message_label.billboard = BaseMaterial3D.BILLBOARD_ENABLED
 	_message_label.fixed_size = true
 	_message_label.no_depth_test = true
 	_message_label.text = ""
 	visible = false
+
+
+func _apply_readable_font_weight() -> void:
+	var base_font := _message_label.font
+	if base_font == null:
+		return
+	var weight_tag := TextServerManager.get_primary_interface().name_to_tag("wght")
+	if not base_font.get_supported_variation_list().has(weight_tag):
+		return
+	var variation := FontVariation.new()
+	variation.base_font = base_font
+	variation.variation_opentype = {weight_tag: 700.0}
+	_message_label.font = variation
 
 
 func _process(_delta: float) -> void:
