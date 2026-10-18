@@ -1,9 +1,9 @@
 shader_type spatial;
 
 uniform sampler2D base_texture : source_color, filter_linear_mipmap;
-uniform vec4 jacket_color : source_color = vec4(0.07, 0.12, 0.18, 1.0);
+uniform vec4 jacket_color : source_color = vec4(0.13, 0.19, 0.29, 1.0);
 uniform vec4 top_color : source_color = vec4(0.29, 0.47, 0.61, 1.0);
-uniform vec4 pants_color : source_color = vec4(0.035, 0.05, 0.075, 1.0);
+uniform vec4 pants_color : source_color = vec4(0.10, 0.15, 0.22, 1.0);
 
 varying vec3 body_position;
 

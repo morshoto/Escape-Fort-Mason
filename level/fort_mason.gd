@@ -61,8 +61,8 @@ func _build_outdoor_plaza() -> void:
 	lamps.name = "StreetLamps"
 	outdoor.add_child(lamps)
 	for lamp_data in [
-		["LampWest", Vector3(-11.0, 0.0, 6.0)],
-		["LampEast", Vector3(11.0, 0.0, 6.0)],
+		["LampWest", Vector3(-6.5, 0.0, 10.5)],
+		["LampEast", Vector3(6.5, 0.0, 10.5)],
 		["LampPierWest", Vector3(-10.0, 0.0, 21.0)],
 		["LampPierEast", Vector3(10.0, 0.0, 21.0)],
 	]:

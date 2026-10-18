@@ -5,6 +5,8 @@ extends CharacterSkin
 
 const BODY_SHADER := preload("res://player/sam/sam_body_shader.gdshader")
 const BODY_TEXTURE := preload("res://player/sam/quaternius/T_Superhero_Male_Dark.png")
+const NIGHT_JACKET_COLOR := Color(0.13, 0.19, 0.29, 1.0)
+const NIGHT_PANTS_COLOR := Color(0.10, 0.15, 0.22, 1.0)
 const HUMANOID_ANIMATIONS := {
 	"idle": {
 		"Head": [[0.0, Vector3.ZERO], [1.2, Vector3(0.0, 1.5, 0.0)], [2.4, Vector3.ZERO]],
@@ -68,6 +70,8 @@ func _apply_stylized_materials() -> void:
 		var body_material := ShaderMaterial.new()
 		body_material.shader = BODY_SHADER
 		body_material.set_shader_parameter("base_texture", BODY_TEXTURE)
+		body_material.set_shader_parameter("jacket_color", NIGHT_JACKET_COLOR)
+		body_material.set_shader_parameter("pants_color", NIGHT_PANTS_COLOR)
 		body.material_override = body_material
 
 	var hair_material := StandardMaterial3D.new()
