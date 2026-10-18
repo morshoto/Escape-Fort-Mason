@@ -114,11 +114,23 @@ func _test_pitch_and_input(controller: CameraController) -> void:
 	)
 
 	var starting_yaw := controller._euler_rotation.y
-	controller._rotation_input = -40.0 * controller.mouse_sensitivity
-	controller._process(1.0 / 60.0)
+	var mouse_turn_degrees: Array[float] = []
+	for frame_delta in [1.0 / 30.0, 1.0 / 60.0, 1.0 / 120.0]:
+		controller._mouse_input = true
+		controller._rotation_input = -40.0 * deg_to_rad(controller.mouse_sensitivity)
+		controller._process(frame_delta)
+		mouse_turn_degrees.append(rad_to_deg(absf(controller._euler_rotation.y - starting_yaw)))
+		controller._euler_rotation.y = starting_yaw
+	controller._mouse_input = false
 	_assert(
-		absf(controller._euler_rotation.y - starting_yaw) > 0.01,
-		"A mouse delta should rotate the camera",
+		absf(mouse_turn_degrees[1] - 10.0) < 0.1,
+		"A 40-pixel mouse delta should turn the camera by 10 degrees at 60 Hz",
+	)
+	_assert(
+		maxf(maxf(mouse_turn_degrees[0], mouse_turn_degrees[1]), mouse_turn_degrees[2])
+			- minf(minf(mouse_turn_degrees[0], mouse_turn_degrees[1]), mouse_turn_degrees[2])
+			< 0.1,
+		"Mouse camera sensitivity should stay consistent at 30, 60, and 120 Hz",
 	)
 
 	Input.action_press("camera_left")
