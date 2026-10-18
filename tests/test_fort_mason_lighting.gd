@@ -33,6 +33,17 @@ func _run() -> void:
 		_assert(moon.light_energy >= 0.45 and moon.light_energy <= 0.8, "Moonlight should provide readable cool fill")
 		_assert(moon.shadow_enabled, "Moonlight should preserve directional form")
 
+	var sam := stage.get_node_or_null("Sam") as CharacterBody3D
+	var spawn_lights := [
+		stage.get_node_or_null("OutdoorPlaza/StreetLamps/LampWest/Light") as OmniLight3D,
+		stage.get_node_or_null("OutdoorPlaza/StreetLamps/LampEast/Light") as OmniLight3D,
+	]
+	_assert(sam != null, "Sam should be present when checking spawn illumination")
+	for light in spawn_lights:
+		_assert(light != null, "The two entrance approach lamps should be present")
+		if sam != null and light != null:
+			_assert(light.global_position.distance_to(sam.global_position + Vector3.UP) < light.omni_range, "Approach lighting should reach Sam at spawn")
+
 	var entrance_fill := stage.get_node_or_null("OutdoorPlaza/EntranceFillLight") as OmniLight3D
 	_assert(entrance_fill != null, "The warehouse entrance should have a warm guide light")
 	if entrance_fill != null:

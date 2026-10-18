@@ -56,6 +56,8 @@ func _test_prompt_tracks_range() -> void:
 		_assert(prompt.text.contains("話す"), "The interaction prompt should explain the companion action")
 		_assert(prompt.billboard == BaseMaterial3D.BILLBOARD_ENABLED, "The prompt should face the camera")
 		_assert(prompt.fixed_size, "The prompt should remain readable at distance")
+		_assert(prompt.font_size <= 24, "The interaction prompt should stay compact")
+		_assert(prompt.pixel_size <= 0.002, "The interaction prompt should not be enlarged by its world-space scale")
 		_assert(prompt.visible, "The prompt should appear when Dots is in range")
 	_assert(dots.has_method("is_interaction_available"), "Dots should report interaction availability")
 	_assert(dots.has_method("get_interaction_distance"), "Dots should report distance to Sam")
