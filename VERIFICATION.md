@@ -41,3 +41,28 @@ godot --path .
 ```
 
 The sample’s source code and assets remain covered by the upstream `LICENSE`.
+
+## MVP end-to-end QA — 2026-10-18
+
+Target: [GitHub Pages](https://morshoto.github.io/Escape-Fort-Mason/), Chromium
+on macOS, Godot 4.7.2 Compatibility export. After PR #17 merged as
+`92656fb`, the public page deployed and rendered Fort Mason, Sam, Alfred Dots,
+and the Japanese greeting. The existing Dots visual evidence is in
+`docs/dots-screenshots/`.
+
+| Check | Result | Evidence / limit |
+| --- | --- | --- |
+| Public Pages entry point and WASM/PCK/JS assets | PASS | Chromium rendered the published scene. `bash tools/smoke_web_assets.sh` checks the four same-origin assets over HTTPS. Pages workflow run [39082678298](https://github.com/morshoto/Escape-Fort-Mason/actions/runs/39082678298) completed successfully. |
+| Godot import and gameplay contracts | PASS | Godot 4.7.2 headless import; player skin, Dots follow, dialogue, variants, Fort Mason stage, and Decisions client tests all passed on PR #17 head `1d8dc8c`. |
+| Production Worker and CORS | PASS (HTTPS) | The production OPTIONS preflight returned HTTP 204 with `Access-Control-Allow-Origin: https://morshoto.github.io`. A synthetic HTTPS POST returned HTTP 200 with `source: "openai"` and an allowlisted choice. |
+| API error and missing-endpoint fallback | PASS (contract) | Decisions client tests cover timeout, network/HTTP errors, malformed or unapproved responses, and an unset endpoint. These are not a public Worker test. |
+| Secret exclusion from Web export | PASS | The final export was checked against the configured local key and `.dev.vars` path; neither was present. `.dev.vars` was removed after testing and was never committed. |
+| Public Pages → production Worker → OpenAI | PASS (Chromium) | On the deployed public page, pressing `R` changed Dots’ line to `Fort Masonの景色を一緒に見よう。`; a concurrent Wrangler tail recorded `POST https://escape-fort-mason-decisions.escape-fort-mason.workers.dev/api/decision - Ok`. The Worker uses the rotated `OPENAI_API_KEY` stored as a Cloudflare secret; its value was not included in browser or repository output. |
+
+Overall result: **PASS** for the public Web MVP path. Public rendering, the Pages-origin API interaction, and the production OpenAI-backed response are verified. Native headed Editor interaction and controller input were not part of this Web acceptance and remain unverified.
+
+Recheck published static assets with:
+
+```sh
+bash tools/smoke_web_assets.sh
+```
