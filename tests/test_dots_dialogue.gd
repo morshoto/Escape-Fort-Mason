@@ -57,6 +57,7 @@ func _test_dialogue_scene_contract() -> void:
 	_assert(bubble != null, "Dialogue UI should include a speech bubble panel")
 	_assert(not dialogue.visible, "Dialogue UI should start hidden until Dots speaks")
 	if bubble != null:
+		dialogue.call("show_message", "拡大縮小テスト")
 		var material := bubble.material_override as StandardMaterial3D
 		_assert(material != null, "Speech bubble should have a material")
 		if material != null:
