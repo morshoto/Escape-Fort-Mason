@@ -66,3 +66,70 @@ Recheck published static assets with:
 ```sh
 bash tools/smoke_web_assets.sh
 ```
+
+## Phase 1 and Phase 2 gameplay polish — 2026-10-18
+
+Environment: macOS 26.5.1 on Apple M4 Pro, Godot 4.7.2, Compatibility
+renderer, and Chromium WebGL2. The Web build was served from
+`http://127.0.0.1:8765/` after exporting to
+`/tmp/escape-fort-mason-gameplay-polish-web/index.html`.
+
+### Changes and test-first evidence
+
+The branch adds regression coverage and tuning for character scale, movement
+and jumping, third-person camera follow and collision, bounded Japanese
+dialogue, Dots interaction, and nighttime stage readability. For each area,
+the `test(...)` commit precedes its implementation commit. The interaction
+placement test first failed on the old prompt placement (`y=-1.9` pixels and
+only `26.5` pixels to the right of Dots); after repositioning, it passed. The
+final interaction test also verifies the prompt remains inside a 1280×720
+viewport and beside Dots.
+
+### Automated checks
+
+| Check | Result | Evidence |
+| --- | --- | --- |
+| Godot editor import | PASS | `godot --headless --path . --editor --quit` completed. |
+| Gameplay regression | PASS | All 11 Godot scripts passed: player skin, Dots companion, dialogue, variants, Fort Mason stage, Decisions client, interaction, lighting, scale, movement, and camera. |
+| Movement consistency | PASS | The movement test measured 4.901 m / 4.858 m / 4.835 m over the same interval at 30 / 60 / 120 Hz. |
+| Worker regression | PASS | `node --test backend/worker.test.mjs`: 8 tests passed. |
+| Web export | PASS | `godot --headless --path . --export-release Web /tmp/escape-fort-mason-gameplay-polish-web/index.html` produced the HTML, JS, WASM, PCK, and support files. |
+| Diff whitespace | PASS | `git diff --check` completed cleanly. |
+
+### Visual review and browser interaction
+
+Two review passes were completed. The composition pass compared the baseline
+and updated outdoor, warehouse entrance, and interior views. The readability
+pass checked Dots’ prompt and dialogue; it caught the prompt blending into the
+warehouse edge at a wide viewport. The prompt was moved closer to Dots and
+rechecked after rebuilding the export.
+
+The final Web build was inspected at 1280×720, 1366×768, and 1920×1080. At all
+three sizes, pressing `E` opened the Japanese local fallback dialogue, and the
+dialogue remained in the viewport. Screenshots from the Godot Compatibility
+renderer are stored in `docs/screenshots/gameplay-polish/after/`; baseline
+views are in `docs/screenshots/gameplay-polish/before/`:
+
+- [Sam and Dots](docs/screenshots/gameplay-polish/after/sam-and-dots.png)
+- [Outdoor view](docs/screenshots/gameplay-polish/after/outdoor.png)
+- [Warehouse entrance](docs/screenshots/gameplay-polish/after/warehouse-entrance.png)
+- [Warehouse interior](docs/screenshots/gameplay-polish/after/warehouse-interior.png)
+- [Interaction prompt](docs/screenshots/gameplay-polish/after/interaction-prompt.png)
+- [Dialogue](docs/screenshots/gameplay-polish/after/dialogue.png)
+
+The local server origin is intentionally rejected by the Decisions API CORS
+policy: an OPTIONS request from `http://127.0.0.1:8765` returned HTTP 403
+`origin_not_allowed`; the configured Pages origin returned HTTP 204. The
+browser therefore showed the expected local fallback. The CUA browser wrapper
+also reported `WrongDocumentError` when the game requested pointer lock, so
+mouse-driven camera rotation was not reverified in this run.
+
+### Native GUI limitation
+
+Native Godot interactive QA remains pending. The Computer Use call for the
+running Godot app returned `cgWindowNotFound`, and the available desktop capture
+showed the macOS lock screen. The saved Godot-rendered screenshots and headless
+scene tests verify rendering and runtime contracts, but they do not count as a
+native interactive playtest. Browser `E` interaction was verified as described
+above; full native keyboard, mouse, and controller playthrough remains
+unverified.
