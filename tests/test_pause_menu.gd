@@ -1,7 +1,7 @@
 extends SceneTree
 
 const STAGE_PATH := "res://level/fort_mason.tscn"
-const RESUME_BUTTON_PATH := "Overlay/Panel/MarginContainer/Content/ResumeButton"
+const RESUME_BUTTON_PATH := "Overlay/CenterContainer/Panel/MarginContainer/Content/ResumeButton"
 
 var _failures: Array[String] = []
 
@@ -29,14 +29,17 @@ func _run() -> void:
 
 	_assert(not paused, "Gameplay should start unpaused")
 	_assert(not pause_menu.get_node("Overlay").visible, "Pause overlay should start hidden")
+	var starting_mouse_mode := Input.mouse_mode
 
 	await _press_escape()
 	_assert(paused, "Escape should pause gameplay")
 	_assert(pause_menu.get_node("Overlay").visible, "Escape should show the pause overlay")
+	_assert(Input.mouse_mode == Input.MOUSE_MODE_VISIBLE, "Pause should release the mouse for the Resume button")
 
 	await _press_escape()
 	_assert(not paused, "Escape should resume gameplay")
 	_assert(not pause_menu.get_node("Overlay").visible, "Resume should hide the pause overlay")
+	_assert(Input.mouse_mode == starting_mouse_mode, "Escape should restore the previous mouse mode")
 
 	await _press_escape()
 	var resume_button := pause_menu.get_node(RESUME_BUTTON_PATH) as Button
@@ -46,6 +49,7 @@ func _run() -> void:
 		await process_frame
 		_assert(not paused, "Resume button should resume gameplay")
 		_assert(not pause_menu.get_node("Overlay").visible, "Resume button should hide the pause overlay")
+		_assert(Input.mouse_mode == starting_mouse_mode, "Resume button should restore the previous mouse mode")
 
 	stage.queue_free()
 	await process_frame

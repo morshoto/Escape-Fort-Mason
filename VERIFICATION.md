@@ -167,3 +167,18 @@ interaction, and warehouse traversal. The out-of-range case has automated
 coverage but no separate native playthrough observation. The local native
 request returned an HTTP error; this QA does not claim a live Decisions API
 success.
+
+## Pause menu QA — 2026-10-18
+
+Environment: macOS 26.5.1, Apple M4 Pro, Godot 4.7.2 Compatibility renderer.
+The native game was launched from the issue worktree; the Web export was served
+from `http://127.0.0.1:8765/` and inspected in Chromium.
+
+| Check | Result | Evidence |
+| --- | --- | --- |
+| Fort Mason starts unpaused with the overlay hidden | PASS | `tests/test_pause_menu.gd` loads the configured main scene and checks the initial state. |
+| Escape pauses and shows the overlay | PASS | Native game and Chromium Web run; see [native pause menu](docs/screenshots/gameplay-polish/native/pause-menu.png). |
+| Escape resumes and restores the previous mouse mode | PASS | Native game and Chromium Web run; the contract test covers both state and mouse mode. |
+| Resume button resumes gameplay | PASS | Clicked in Chromium; the contract test emits the button signal and checks the resumed state. |
+| Godot gameplay regression suite | PASS | All scripts in `tests/*.gd` passed after an editor import scan. |
+| Web export | PASS | `godot --headless --path . --export-release Web /tmp/efm-pause-menu-web/index.html`. |
