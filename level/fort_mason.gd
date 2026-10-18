@@ -86,7 +86,7 @@ func _build_warehouse() -> void:
 	var wall_material := _material("warehouse_wall", WAREHOUSE_WALL)
 	var trim_material := _material("warehouse_trim", WAREHOUSE_TRIM)
 
-	_add_box(warehouse, "Floor", Vector3(21.0, 0.4, 16.0), Vector3(0.0, -0.2, -12.0), floor_material)
+	_add_box(warehouse, "Floor", Vector3(21.0, 0.4, 17.5), Vector3(0.0, -0.2, -11.25), floor_material)
 	_add_box(warehouse, "WestWall", Vector3(0.5, 5.0, 16.0), Vector3(-10.5, 2.5, -12.0), wall_material)
 	_add_box(warehouse, "EastWall", Vector3(0.5, 5.0, 16.0), Vector3(10.5, 2.5, -12.0), wall_material)
 	_add_box(warehouse, "BackWall", Vector3(21.0, 5.0, 0.5), Vector3(0.0, 2.5, -19.75), wall_material)
