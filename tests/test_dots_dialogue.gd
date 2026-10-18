@@ -68,6 +68,8 @@ func _test_dialogue_scene_contract() -> void:
 			_assert(panel_mesh.size.x <= 2.6 and panel_mesh.size.y <= 0.95, "Speech bubble panel should be compact")
 		var horizontal_offset = dialogue.get("bubble_horizontal_offset")
 		_assert(horizontal_offset != null and float(horizontal_offset) >= 1.6, "Dialogue should sit to the side of Dots")
+		var anchor_height = dialogue.get("bubble_anchor_height")
+		_assert(anchor_height != null and float(anchor_height) >= 2.8, "Dialogue should sit above the characters")
 		var near_scale: float = bubble_root.scale.x
 		camera.position.z = 16.0
 		await process_frame
@@ -192,8 +194,13 @@ func _test_dialogue_safe_screen_margin() -> void:
 	var half_panel_width: float = panel_mesh.size.x * dialogue.get_node("Bubble").scale.x * 0.5
 	var left_edge := camera.unproject_position(bubble_anchor - camera.global_basis.x * half_panel_width)
 	var right_edge := camera.unproject_position(bubble_anchor + camera.global_basis.x * half_panel_width)
+	var half_panel_height: float = panel_mesh.size.y * dialogue.get_node("Bubble").scale.y * 0.5
+	var top_edge := camera.unproject_position(bubble_anchor + camera.global_basis.y * half_panel_height)
+	var bottom_edge := camera.unproject_position(bubble_anchor - camera.global_basis.y * half_panel_height)
 	_assert(left_edge.x >= viewport_size.x * 0.04, "Speech bubble panel should stay inside the left screen margin")
 	_assert(right_edge.x <= viewport_size.x * 0.96, "Speech bubble panel should stay inside the right screen margin")
+	_assert(top_edge.y >= viewport_size.y * 0.04, "Speech bubble panel should stay inside the top screen margin")
+	_assert(bottom_edge.y <= viewport_size.y * 0.96, "Speech bubble panel should stay inside the bottom screen margin")
 	anchor.queue_free()
 	camera.queue_free()
 	await process_frame
