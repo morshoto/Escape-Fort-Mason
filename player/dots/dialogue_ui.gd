@@ -7,14 +7,16 @@ const DEFAULT_MESSAGE := "こんにちは、Sam！"
 const DEBUG_INPUT_ACTION := "show_dots_dialogue"
 const BUBBLE_REFERENCE_DISTANCE := 8.0
 
-@export_range(4, 32, 1) var max_line_characters := 16
+@export_range(4, 32, 1) var max_line_characters := 14
 @export_range(1, 5, 1) var max_visible_lines := 3
 @export_range(0.8, 1.5, 0.05) var max_bubble_scale := 1.2
-@export var bubble_anchor_height := 1.7
+@export var bubble_anchor_height := 3.0
+@export var bubble_horizontal_offset := 1.8
 @export var default_message := DEFAULT_MESSAGE
 
 @onready var _message_label: Label3D = $Message
 @onready var _bubble: Node3D = $Bubble
+@onready var _panel: MeshInstance3D = $Bubble/Panel
 
 var _message := ""
 var _home_local_position := Vector3.ZERO
@@ -36,7 +38,11 @@ func _process(_delta: float) -> void:
 	if camera == null:
 		return
 	var base_position := _get_home_world_position()
-	var anchor_position := base_position + Vector3(0.0, bubble_anchor_height, 0.0)
+	var anchor_position := (
+		base_position
+		+ Vector3(0.0, bubble_anchor_height, 0.0)
+		+ camera.global_basis.x * bubble_horizontal_offset
+	)
 	if camera.is_position_behind(anchor_position):
 		global_position = base_position
 		return
@@ -50,14 +56,30 @@ func _process(_delta: float) -> void:
 		global_position = base_position
 		return
 	var screen_position := camera.unproject_position(anchor_position)
-	var horizontal_margin := minf(viewport_size.x * 0.08, 220.0)
-	var vertical_margin := minf(viewport_size.y * 0.1, 120.0)
+	var panel_mesh := _panel.mesh as QuadMesh
+	var half_panel_width := panel_mesh.size.x * _bubble.scale.x * 0.5
+	var half_panel_height := panel_mesh.size.y * _bubble.scale.y * 0.5
+	var panel_left := camera.unproject_position(anchor_position - camera.global_basis.x * half_panel_width)
+	var panel_right := camera.unproject_position(anchor_position + camera.global_basis.x * half_panel_width)
+	var panel_top := camera.unproject_position(anchor_position + camera.global_basis.y * half_panel_height)
+	var panel_bottom := camera.unproject_position(anchor_position - camera.global_basis.y * half_panel_height)
+	var half_panel_width_pixels := absf(panel_right.x - screen_position.x)
+	var half_panel_height_pixels := absf(panel_bottom.y - screen_position.y)
+	var horizontal_margin := minf(viewport_size.x * 0.04, 100.0) + half_panel_width_pixels
+	var vertical_margin := minf(viewport_size.y * 0.04, 80.0) + half_panel_height_pixels
+	horizontal_margin = minf(horizontal_margin, viewport_size.x * 0.49)
+	vertical_margin = minf(vertical_margin, viewport_size.y * 0.49)
 	var safe_position := Vector2(
 		clampf(screen_position.x, horizontal_margin, viewport_size.x - horizontal_margin),
 		clampf(screen_position.y, vertical_margin, viewport_size.y - vertical_margin)
 	)
 	var safe_world_position := camera.project_position(safe_position, distance)
-	global_position = base_position + safe_world_position - anchor_position
+	global_position = (
+		base_position
+		+ camera.global_basis.x * bubble_horizontal_offset
+		+ safe_world_position
+		- anchor_position
+	)
 
 
 func _unhandled_input(event: InputEvent) -> void:
