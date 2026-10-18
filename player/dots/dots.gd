@@ -55,6 +55,7 @@ var _message_time_remaining := 0.0
 
 func _ready() -> void:
 	_build_visuals()
+	_apply_readable_prompt_font_weight()
 	var dialogue := get_node_or_null("DialogueUI")
 	if dialogue != null and dialogue.has_signal("message_changed"):
 		dialogue.message_changed.connect(_on_dialogue_message_changed)
@@ -193,16 +194,32 @@ func _update_interaction_prompt() -> void:
 	var screen_right := global_basis.x
 	if camera != null:
 		screen_right = camera.global_basis.x
+	var prompt_side := 1.0
+	if is_instance_valid(_target) and (_target.global_position - global_position).dot(screen_right) > 0.0:
+		prompt_side = -1.0
 	_interaction_prompt.global_position = (
 		global_position
 		+ Vector3.UP * INTERACTION_PROMPT_HEIGHT
-		+ screen_right * INTERACTION_PROMPT_HORIZONTAL_OFFSET
+		+ screen_right * INTERACTION_PROMPT_HORIZONTAL_OFFSET * prompt_side
 	)
 	var dialogue := get_node_or_null("DialogueUI")
 	var dialogue_visible: bool = false
 	if dialogue != null:
 		dialogue_visible = dialogue.visible
 	_interaction_prompt.visible = is_interaction_available() and not dialogue_visible
+
+
+func _apply_readable_prompt_font_weight() -> void:
+	if _interaction_prompt == null or _interaction_prompt.font == null:
+		return
+	var base_font := _interaction_prompt.font
+	var weight_tag := TextServerManager.get_primary_interface().name_to_tag("wght")
+	if not base_font.get_supported_variation_list().has(weight_tag):
+		return
+	var variation := FontVariation.new()
+	variation.base_font = base_font
+	variation.variation_opentype = {weight_tag: 700.0}
+	_interaction_prompt.font = variation
 
 
 func _follow_weight(delta: float) -> float:
