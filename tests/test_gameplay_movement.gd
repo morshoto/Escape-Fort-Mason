@@ -26,9 +26,14 @@ func _run() -> void:
 		held_jump.height <= 1.3,
 		"Holding jump should not extend the apex beyond 1.3m (measured %.3fm)" % held_jump.height,
 	)
+	print(
+		"Measured jump arcs: released %.3fm/%.3fs, held %.3fm/%.3fs"
+		% [released_jump.height, released_jump.airtime, held_jump.height, held_jump.airtime],
+	)
 	await _test_airborne_press_does_not_restart_jump()
 	var cardinal := await _simulate_horizontal(60, false)
 	var diagonal := await _simulate_horizontal(60, true)
+	print("Measured horizontal travel: cardinal %.3fm, diagonal %.3fm" % [cardinal.distance, diagonal.distance])
 	_assert(
 		diagonal.distance <= cardinal.distance * 1.05,
 		"Diagonal input should not move faster than cardinal input",
@@ -42,11 +47,16 @@ func _run() -> void:
 		distances.append((await _simulate_horizontal(tick_rate, false)).distance)
 	var minimum_distance: float = distances.min()
 	var maximum_distance: float = distances.max()
+	print(
+		"Measured 30/60/120 Hz travel: %.3fm / %.3fm / %.3fm"
+		% [distances[0], distances[1], distances[2]],
+	)
 	_assert(
 		maximum_distance - minimum_distance <= 0.2,
 		"Movement distance should stay stable at 30/60/120 Hz (range %.3fm)"
 		% (maximum_distance - minimum_distance),
 	)
+	Engine.physics_ticks_per_second = 60
 	if _failures.is_empty():
 		print("Gameplay movement tests passed")
 		quit(0)
@@ -74,7 +84,7 @@ func _test_tuning_ranges() -> void:
 		player.jump_initial_impulse >= 4.5 and player.jump_initial_impulse <= 6.5,
 		"Jump impulse should match the measured jump arc",
 	)
-	player.queue_free()
+	_dispose_player(player)
 	await process_frame
 
 
@@ -101,7 +111,7 @@ func _simulate_jump(hold: bool) -> Dictionary:
 			break
 	Input.action_release("jump")
 	var result := {"height": max_height, "airtime": airtime}
-	player.queue_free()
+	_dispose_player(player)
 	floor.queue_free()
 	await physics_frame
 	return result
@@ -126,7 +136,7 @@ func _test_airborne_press_does_not_restart_jump() -> void:
 		velocity_after < velocity_before,
 		"Airborne jump input should not add another vertical boost",
 	)
-	player.queue_free()
+	_dispose_player(player)
 	floor.queue_free()
 	await physics_frame
 
@@ -148,7 +158,7 @@ func _simulate_horizontal(tick_rate: int, diagonal: bool) -> Dictionary:
 		"distance": Vector2(player.global_position.x - start.x, player.global_position.z - start.z).length(),
 		"speed": Vector2(player.velocity.x, player.velocity.z).length(),
 	}
-	player.queue_free()
+	_dispose_player(player)
 	floor.queue_free()
 	await physics_frame
 	return result
@@ -160,6 +170,12 @@ func _instantiate_player() -> CharacterBody3D:
 	player.collision_mask = 3
 	root.add_child(player)
 	return player
+
+
+func _dispose_player(player: CharacterBody3D) -> void:
+	(player.get_node("StepSound") as AudioStreamPlayer3D).stop()
+	(player.get_node("LandingSound") as AudioStreamPlayer3D).stop()
+	player.queue_free()
 
 
 func _create_floor() -> StaticBody3D:
