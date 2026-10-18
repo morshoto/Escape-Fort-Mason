@@ -59,18 +59,26 @@ func _test_prompt_screen_bounds() -> void:
 	for _frame in range(30):
 		await process_frame
 	var camera := stage.get_node("Sam/CameraController/PlayerCamera") as Camera3D
+	var sam := stage.get_node("Sam") as CharacterBody3D
 	var dots := stage.get_node("Dots") as Node3D
 	var prompt := stage.get_node("Dots/InteractionPrompt") as Label3D
+	dots.global_position = sam.global_position - camera.global_basis.x * 1.2
+	dots.call("_update_interaction_prompt")
 	var screen_position := camera.unproject_position(prompt.global_position)
 	var dots_screen_position := camera.unproject_position(dots.global_position)
+	var sam_screen_position := camera.unproject_position(sam.global_position)
 	var viewport_size := root.get_visible_rect().size
 	_assert(
 		screen_position.y >= 32.0,
 		"The interaction prompt should stay fully visible below the top screen edge (y=%.1f)" % screen_position.y
 	)
 	_assert(
-		screen_position.x >= dots_screen_position.x + 100.0,
+		absf(screen_position.x - dots_screen_position.x) >= 100.0,
 		"The interaction prompt should sit beside Dots instead of covering its face (dx=%.1f)" % (screen_position.x - dots_screen_position.x)
+	)
+	_assert(
+		(screen_position.x - dots_screen_position.x) * (sam_screen_position.x - dots_screen_position.x) < 0.0,
+		"The interaction prompt should sit on the side of Dots away from Sam"
 	)
 	_assert(
 		screen_position.y <= viewport_size.y - 24.0,
@@ -90,8 +98,20 @@ func _test_prompt_tracks_range() -> void:
 		_assert(prompt.text.contains("話す"), "The interaction prompt should explain the companion action")
 		_assert(prompt.billboard == BaseMaterial3D.BILLBOARD_ENABLED, "The prompt should face the camera")
 		_assert(prompt.fixed_size, "The prompt should remain readable at distance")
-		_assert(prompt.font_size <= 24, "The interaction prompt should stay compact")
+		_assert(prompt.font_size == 24, "The interaction prompt should use readable compact text")
 		_assert(prompt.pixel_size <= 0.002, "The interaction prompt should not be enlarged by its world-space scale")
+		var font_variation := prompt.font as FontVariation
+		_assert(font_variation != null, "The interaction prompt should use a bold variable font weight")
+		if font_variation != null:
+			var weight_tag := TextServerManager.get_primary_interface().name_to_tag("wght")
+			_assert(
+				float(font_variation.variation_opentype.get(weight_tag, 0.0)) >= 700.0,
+				"The interaction prompt should use bold text for contrast",
+			)
+		_assert(
+			prompt.modulate.r >= 0.95 and prompt.modulate.g >= 0.95 and prompt.modulate.b >= 0.95,
+			"The interaction prompt should use a bright text color against the dark scene",
+		)
 		_assert(prompt.visible, "The prompt should appear when Dots is in range")
 	_assert(dots.has_method("is_interaction_available"), "Dots should report interaction availability")
 	_assert(dots.has_method("get_interaction_distance"), "Dots should report distance to Sam")
