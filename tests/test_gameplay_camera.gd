@@ -22,11 +22,27 @@ func _run() -> void:
 	var sam := stage.get_node("Sam") as CharacterBody3D
 	var controller := sam.get_node("CameraController") as CameraController
 	var arm := controller.get_node("CameraSpringArm") as SpringArm3D
+	var ground_shapecast := sam.get_node("GroundShapeCast") as ShapeCast3D
 	var third_person_pivot := controller.get_node("CameraSpringArm/CameraThirdPersonPivot") as Marker3D
 
+	ground_shapecast.force_shapecast_update()
+	_assert(
+		(ground_shapecast.collision_mask & FortMasonStage.LEVEL_COLLISION_LAYER) != 0,
+		"Ground height ShapeCast should detect the Fort Mason level layer",
+	)
+	_assert(
+		ground_shapecast.get_collision_count() > 0,
+		"Ground height ShapeCast should find the floor under Sam",
+	)
+	if ground_shapecast.get_collision_count() > 0:
+		_assert(
+			absf(sam._ground_height - ground_shapecast.get_collision_point(0).y) < 0.1,
+			"Camera ground target should match the detected floor height",
+		)
 	_test_default_framing(controller, arm, third_person_pivot)
 	_test_collision_and_pivot_modes(stage, controller, arm)
 	_test_smooth_follow(sam, controller)
+	await _test_jump_framing(sam, controller)
 	_test_pitch_and_input(controller)
 
 	stage.queue_free()
@@ -97,6 +113,27 @@ func _test_smooth_follow(sam: CharacterBody3D, controller: CameraController) -> 
 		absf(controller.global_position.x - sam.global_position.x) < 0.05,
 		"Camera should settle on the player after movement",
 	)
+
+
+func _test_jump_framing(sam: CharacterBody3D, controller: CameraController) -> void:
+	var grounded_height := sam.global_position.y
+	sam.global_position.y += 1.1
+	sam.velocity.y = 5.7
+	await physics_frame
+	controller._process(1.0)
+	var projected_head := controller.camera.unproject_position(
+		sam.global_position + Vector3.UP * 2.0
+	)
+	var viewport_height := controller.camera.get_viewport().get_visible_rect().size.y
+	_assert(
+		projected_head.y >= 0.0 and projected_head.y <= viewport_height,
+		"Sam's head should remain in frame at the jump apex (screen y %.1f / %.1f)"
+		% [projected_head.y, viewport_height],
+	)
+	sam.global_position.y = grounded_height
+	sam.velocity = Vector3.ZERO
+	await physics_frame
+	controller._process(1.0)
 
 
 func _test_pitch_and_input(controller: CameraController) -> void:
