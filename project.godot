@@ -10,7 +10,7 @@ config_version=5
 
 [application]
 
-config/name="RoboBlast: TPS Demo"
+config/name="Escape Fort Mason"
 run/main_scene="res://level/fort_mason.tscn"
 config/features=PackedStringArray("4.7", "Forward Plus")
 run/max_fps=60
