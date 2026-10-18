@@ -168,6 +168,21 @@ coverage but no separate native playthrough observation. The local native
 request returned an HTTP error; this QA does not claim a live Decisions API
 success.
 
+### Deterministic game progress — issue #22 (2026-10-18)
+
+| Check | Result | Evidence |
+| --- | --- | --- |
+| Godot 4.7.2 editor import | PASS | `godot --headless --path . --editor --quit` registered `GameProgress` and completed asset import. |
+| Puzzle progress contract | PASS | `tests/test_game_progress.gd` checks all six solve orders, allowlisted IDs, unique completion events, one exit unlock per run, guarded chapter transitions, reset/replay, and fresh state after scene restart. |
+| Godot regression suite | PASS | All 12 contract scripts listed in `.github/workflows/ci.yml` passed, including movement, camera, Dots, stage, and GameProgress. |
+| Decisions Worker regression | PASS | `node --test backend/worker.test.mjs`: 8 tests passed. |
+| Web Compatibility export | PASS | `godot --headless --path . --export-release Web build/web/index.html` generated the HTML, JS, WASM, and PCK files. |
+
+`docs/game-progress.md` records the `FortMason/GameProgress` path, lifecycle,
+signals, API, reset behavior, chapter transitions, and the Godot-only puzzle
+completion boundary.
+
+
 ## Pause menu QA — 2026-10-18
 
 Environment: macOS 26.5.1, Apple M4 Pro, Godot 4.7.2 Compatibility renderer.
