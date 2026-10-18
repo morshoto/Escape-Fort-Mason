@@ -15,7 +15,7 @@ script = ExtResource("1_script")
 script = ExtResource("3_decisions")
 
 [node name="InteractionPrompt" type="Label3D" parent="."]
-position = Vector3(0, 1.42, 0)
+position = Vector3(0, 0.95, 0)
 billboard = 1
 text = "E  話す"
 font = ExtResource("4_font")

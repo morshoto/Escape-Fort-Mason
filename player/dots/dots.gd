@@ -7,6 +7,8 @@ const DotsVisuals = preload("res://player/dots/dots_visuals.gd")
 const DECISION_INPUT_ACTION := "request_dots_decision"
 const INTERACTION_INPUT_ACTION := "interact"
 const DECISION_CONTEXT := "Sam wants to talk to Dots while exploring Fort Mason. Choose one helpful companion response."
+const INTERACTION_PROMPT_HEIGHT := 0.95
+const INTERACTION_PROMPT_HORIZONTAL_OFFSET := 0.9
 
 enum VisualVariant {
 	ALFRED,
@@ -187,6 +189,15 @@ func _on_dialogue_message_changed(message: String) -> void:
 func _update_interaction_prompt() -> void:
 	if _interaction_prompt == null:
 		return
+	var camera := get_viewport().get_camera_3d()
+	var screen_right := global_basis.x
+	if camera != null:
+		screen_right = camera.global_basis.x
+	_interaction_prompt.global_position = (
+		global_position
+		+ Vector3.UP * INTERACTION_PROMPT_HEIGHT
+		+ screen_right * INTERACTION_PROMPT_HORIZONTAL_OFFSET
+	)
 	var dialogue := get_node_or_null("DialogueUI")
 	var dialogue_visible: bool = false
 	if dialogue != null:
