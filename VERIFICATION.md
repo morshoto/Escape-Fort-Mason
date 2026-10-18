@@ -27,7 +27,7 @@ Compatibility renderer, and a local Chromium WebGL2 run.
 | Non-blocking companion | PASS | The visual scene contains no `CollisionShape3D` or physics body, so it cannot block Sam. |
 | Chromium Web gameplay | PASS | The exported Compatibility build rendered Alfred beside Sam in Chromium; synthetic `W` input moved the player while Dots remained visible and followed. |
 | Capture reproducibility | PASS | `tools/capture_dots_visuals.gd` regenerates all variant views, the four-Dot gallery, and the Sam-plus-Dots gameplay capture through a 640x640 Compatibility `SubViewport`. |
-| Native headed Editor playtest | PENDING | Headless Editor import and runtime passed; a headed native Godot playtest was not available in this session. |
+| Native headed Editor playtest | PASS | The 2026-10-18 native gameplay pass is documented below; screenshots are in `docs/screenshots/gameplay-polish/native/`. |
 
 ## Commands
 
@@ -72,28 +72,36 @@ bash tools/smoke_web_assets.sh
 Environment: macOS 26.5.1 on Apple M4 Pro, Godot 4.7.2, Compatibility
 renderer, and Chromium WebGL2. The Web build was served from
 `http://127.0.0.1:8765/` after exporting to
-`/tmp/escape-fort-mason-gameplay-polish-web/index.html`.
+`/tmp/efm-gameplay-polish-web/index.html`.
 
 ### Changes and test-first evidence
 
 The branch adds regression coverage and tuning for character scale, movement
 and jumping, third-person camera follow and collision, bounded Japanese
-dialogue, Dots interaction, and nighttime stage readability. For each area,
-the `test(...)` commit precedes its implementation commit. The interaction
+dialogue, Dots interaction, and nighttime stage readability. The interaction
 placement test first failed on the old prompt placement (`y=-1.9` pixels and
 only `26.5` pixels to the right of Dots); after repositioning, it passed. The
 final interaction test also verifies the prompt remains inside a 1280×720
 viewport and beside Dots.
+
+Native QA found that Sam could fall through a gap between the plaza and
+warehouse floors. The new stage test failed at `Vector3(0, 1, -3.25)` before
+the warehouse floor was extended to meet the plaza. Commits `2be2dc4` and
+`75e6058` record the failing test and fix. Browser QA also exposed low contrast
+in the Web dialogue: its outline drew over the text fill. The draw-order test
+failed with the original priorities; commits `9d537a8` and `2a7c7b6` set the
+label priority to 1 and outline priority to 0. The rebuilt Web export renders
+the fallback clearly at all three tested sizes.
 
 ### Automated checks
 
 | Check | Result | Evidence |
 | --- | --- | --- |
 | Godot editor import | PASS | `godot --headless --path . --editor --quit` completed. |
-| Gameplay regression | PASS | All 11 Godot scripts passed: player skin, Dots companion, dialogue, variants, Fort Mason stage, Decisions client, interaction, lighting, scale, movement, and camera. |
+| Gameplay regression | PASS | All 11 Godot scripts passed when run directly, including interaction and label draw order; `tests/run-tests.sh` is absent from this checkout. Coverage includes player skin, Dots companion, dialogue, variants, Fort Mason stage, Decisions client, lighting, scale, movement, and camera. |
 | Movement consistency | PASS | The movement test measured 4.901 m / 4.858 m / 4.835 m over the same interval at 30 / 60 / 120 Hz. |
 | Worker regression | PASS | `node --test backend/worker.test.mjs`: 8 tests passed. |
-| Web export | PASS | `godot --headless --path . --export-release Web /tmp/escape-fort-mason-gameplay-polish-web/index.html` produced the HTML, JS, WASM, PCK, and support files. |
+| Web export | PASS | `godot --headless --path . --export-release Web /tmp/efm-gameplay-polish-web/index.html` produced the HTML, JS, WASM, PCK, and support files. |
 | Diff whitespace | PASS | `git diff --check` completed cleanly. |
 
 ### Visual review and browser interaction
@@ -104,11 +112,28 @@ pass checked Dots’ prompt and dialogue; it caught the prompt blending into the
 warehouse edge at a wide viewport. The prompt was moved closer to Dots and
 rechecked after rebuilding the export.
 
-The final Web build was inspected at 1280×720, 1366×768, and 1920×1080. At all
-three sizes, pressing `E` opened the Japanese local fallback dialogue, and the
-dialogue remained in the viewport. Screenshots from the Godot Compatibility
-renderer are stored in `docs/screenshots/gameplay-polish/after/`; baseline
-views are in `docs/screenshots/gameplay-polish/before/`:
+The final Web build was inspected in Chromium 155 at 1280×720, 1366×768, and
+1920×1080. At each size, pressing `E` opened the Japanese local fallback and
+the text stayed legible inside the viewport after the draw-order correction.
+Holding `W` crossed the doorway and reached the warehouse interior; holding
+`S` returned Sam to the plaza. The local HTTP origin is rejected by the
+Decisions API CORS policy, so these browser interactions exercised the local
+fallback. The browser pointer-lock camera path was not reverified: the CUA
+wrapper had reported `WrongDocumentError` when the page requested pointer
+lock. Native camera rotation was separately observed below.
+
+The browser captures are in `docs/screenshots/gameplay-polish/web/`:
+
+- [Outdoor prompt](docs/screenshots/gameplay-polish/web/outdoor-prompt.png)
+- [Warehouse interior](docs/screenshots/gameplay-polish/web/warehouse-interior.png)
+- [Warehouse exit](docs/screenshots/gameplay-polish/web/warehouse-exit.png)
+- [Fallback dialogue, 1280×720](docs/screenshots/gameplay-polish/web/dialogue-fallback-1280.png)
+- [Fallback dialogue, 1366×768](docs/screenshots/gameplay-polish/web/dialogue-fallback-1366.png)
+- [Fallback dialogue, 1920×1080](docs/screenshots/gameplay-polish/web/dialogue-fallback-1920.png)
+
+Godot Compatibility renderer comparison captures are in
+`docs/screenshots/gameplay-polish/after/`; baseline views are in
+`docs/screenshots/gameplay-polish/before/`:
 
 - [Sam and Dots](docs/screenshots/gameplay-polish/after/sam-and-dots.png)
 - [Outdoor view](docs/screenshots/gameplay-polish/after/outdoor.png)
@@ -117,31 +142,28 @@ views are in `docs/screenshots/gameplay-polish/before/`:
 - [Interaction prompt](docs/screenshots/gameplay-polish/after/interaction-prompt.png)
 - [Dialogue](docs/screenshots/gameplay-polish/after/dialogue.png)
 
-The local server origin is intentionally rejected by the Decisions API CORS
-policy: an OPTIONS request from `http://127.0.0.1:8765` returned HTTP 403
-`origin_not_allowed`; the configured Pages origin returned HTTP 204. The
-browser therefore showed the expected local fallback. The CUA browser wrapper
-also reported `WrongDocumentError` when the game requested pointer lock, so
-mouse-driven camera rotation was not reverified in this run.
+### Native headed gameplay QA — passed with stated limits (2026-10-18)
 
-### Native headed gameplay QA — partial (2026-10-18)
-
-A native Godot 4.7.2 debug window rendered the Fort Mason scene with Sam, Dots,
-and the interaction prompt. These observations are partial Computer Use
-evidence; no native screenshot was saved to the repository.
+Environment: macOS 26.5.1 on Apple M4 Pro, Godot 4.7.2 Compatibility
+renderer. The game ran in a standalone native Godot window after importing the
+dedicated worktree. The CUA native bridge was unavailable, so keyboard and
+mouse input were sent through macOS CGEvents and screenshots were captured
+from the actual game window with `screencapture`.
 
 | Check | Result | Evidence / limit |
 | --- | --- | --- |
-| Scene and interaction prompt | OBSERVED | The debug window rendered Sam, Dots, and the Japanese `E 話す` prompt. |
-| Keyboard movement | PARTIAL | Repeated W taps moved Sam toward Dots; repeated S taps moved him back and changed his facing. Left/right, diagonal, continuous movement, walls, and warehouse traversal were not checked. |
-| Dots interaction | PASS (fallback observed) | E opened the Japanese fallback dialogue panel. The message was visible in the native window, but readability was not confidently judged from the view. |
-| Dialogue readability | PENDING | The dark dialogue panel appeared; native text legibility and longer Japanese messages still need review. The Chromium screenshots above are separate evidence. |
-| Jump and landing | PENDING | Repeated space taps produced no clear visible jump. The input bridge exposes taps rather than a held key, so this does not establish a gameplay failure or pass. |
-| Camera rotation and collision | INCONCLUSIVE | A small CUA drag caused a steep camera tilt. Pointer capture may have turned the initial cursor relocation into a large relative delta; framing and collision were not validated. |
-| Desktop availability | BLOCKED | The macOS login screen reappeared and the Godot window bridge returned `cgWindowNotFound`. Native playtesting requires the desktop to be unlocked. |
+| Scene and interaction prompt | PASS | Sam and Dots rendered at spawn with the Japanese `E 話す` prompt. See [outdoor prompt](docs/screenshots/gameplay-polish/native/outdoor-prompt.png). |
+| Movement | PASS | Continuous W/S and diagonal movement changed position and facing while Sam remained grounded. |
+| Jump and landing | PASS | Held and released Space produced distinct jumps; the landing and scene remained visible. See [jump in motion](docs/screenshots/gameplay-polish/native/jump-in-motion.png) and [landed](docs/screenshots/gameplay-polish/native/jump-landed.png). |
+| Camera framing and collision | PASS | Repeated raw mouse-motion deltas rotated the camera to a side view without clipping the scene. See [turned camera](docs/screenshots/gameplay-polish/native/camera-turned.png). |
+| Dots interaction and fallback | PASS | E opened the Japanese HTTP-error fallback; repeated E during the active response/cooldown did not duplicate it. Text was legible in the native window. See [fallback dialogue](docs/screenshots/gameplay-polish/native/dialogue-fallback.png). |
+| Warehouse traversal and doorway ground | PASS | Sam crossed the doorway, stayed supported through the former gap, reached the back wall, and returned outdoors. The back wall stopped forward movement. See [interior](docs/screenshots/gameplay-polish/native/warehouse-interior.png), [back wall](docs/screenshots/gameplay-polish/native/warehouse-back-wall.png), and [exit](docs/screenshots/gameplay-polish/native/warehouse-exit.png). |
+| Indoor and outdoor readability | PASS | The interior is darker than the plaza, while the floor, wall edges, dock, Sam, and Dots remain distinguishable in motion. |
+| Out-of-range interaction | NOT OBSERVED NATIVELY | Dots follows Sam and remained close during normal movement, so the player could not naturally leave its interaction radius. `tests/test_dots_interaction.gd` separately moves the target out of range and verifies the prompt and interaction are disabled. |
+| Longer Japanese dialogue | PASS (automated) | Dialogue wrapping and bounded line count are covered by the dialogue tests; the native capture shows the short local fallback. |
 
-Movement and the fallback interaction have native observations, but they do
-not satisfy the required native interactive QA gate. Full movement coverage,
-jump, camera framing/collision, dialogue readability, and indoor/outdoor review
-remain unverified. The saved Godot-rendered screenshots and headless scene
-tests verify rendering and runtime contracts, not native interactive behavior.
+The native interactive gameplay gate passed for movement, jumping, camera,
+interaction, and warehouse traversal. The out-of-range case has automated
+coverage but no separate native playthrough observation. The local native
+request returned an HTTP error; this QA does not claim a live Decisions API
+success.
