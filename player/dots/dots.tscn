@@ -1,8 +1,9 @@
-[gd_scene load_steps=4 format=3]
+[gd_scene load_steps=5 format=3]
 
 [ext_resource type="Script" path="res://player/dots/dots.gd" id="1_script"]
 [ext_resource type="PackedScene" path="res://player/dots/dialogue_ui.tscn" id="2_dialogue"]
 [ext_resource type="Script" path="res://player/dots/dots_decision_client.gd" id="3_decisions"]
+[ext_resource type="FontFile" path="res://player/dots/fonts/MPLUS1[wght].ttf" id="4_font"]
 
 
 [node name="Dots" type="Node3D"]
@@ -12,3 +13,18 @@ script = ExtResource("1_script")
 
 [node name="DecisionsClient" type="Node" parent="."]
 script = ExtResource("3_decisions")
+
+[node name="InteractionPrompt" type="Label3D" parent="."]
+position = Vector3(0, 0.95, 0)
+billboard = 1
+text = "E  話す"
+font = ExtResource("4_font")
+font_size = 22
+pixel_size = 0.001
+modulate = Color(1, 0.886275, 0.596078, 1)
+outline_size = 6
+outline_modulate = Color(0.054902, 0.0705882, 0.0980392, 1)
+fixed_size = true
+no_depth_test = true
+horizontal_alignment = 1
+visible = false

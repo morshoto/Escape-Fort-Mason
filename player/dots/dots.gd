@@ -1,9 +1,14 @@
 class_name Dots
 extends Node3D
 
+signal interaction_started
+
 const DotsVisuals = preload("res://player/dots/dots_visuals.gd")
 const DECISION_INPUT_ACTION := "request_dots_decision"
-const DECISION_CONTEXT := "Sam is exploring Fort Mason at night. Choose one helpful companion action."
+const INTERACTION_INPUT_ACTION := "interact"
+const DECISION_CONTEXT := "Sam wants to talk to Dots while exploring Fort Mason. Choose one helpful companion response."
+const INTERACTION_PROMPT_HEIGHT := 0.95
+const INTERACTION_PROMPT_HORIZONTAL_OFFSET := 0.9
 
 enum VisualVariant {
 	ALFRED,
@@ -18,20 +23,23 @@ enum MovementState {
 	RUN,
 }
 
-## Player-relative position: right, above, and behind the player.
-@export var follow_offset := Vector3(1.8, 1.25, 1.8)
+## Player-relative position: beside the player at chest height.
+@export var follow_offset := Vector3(1.15, 0.62, 0.0)
 ## Larger values make the companion catch up more quickly.
 @export_range(0.1, 30.0, 0.1) var follow_speed := 8.0
 ## Larger values make the companion turn more quickly.
 @export_range(0.1, 30.0, 0.1) var rotation_speed := 10.0
 ## Vertical idle motion in world units.
-@export_range(0.0, 1.0, 0.01) var bob_height := 0.2
+@export_range(0.0, 1.0, 0.01) var bob_height := 0.15
 ## Vertical idle motion frequency.
 @export_range(0.0, 10.0, 0.1) var bob_speed := 2.0
 ## Horizontal speed below this value is treated as idle.
 @export_range(0.0, 3.0, 0.05) var walk_speed_threshold := 0.25
 ## Horizontal speed at or above this value is treated as running.
 @export_range(0.5, 15.0, 0.1) var run_speed_threshold := 5.0
+@export_range(0.5, 5.0, 0.1) var interaction_radius := 2.5
+@export_range(0.0, 5.0, 0.05) var interaction_cooldown := 1.0
+@export_range(0.1, 10.0, 0.1) var interaction_message_duration := 4.0
 @export var target_path: NodePath
 @export var visual_variant: VisualVariant = VisualVariant.ALFRED
 
@@ -39,15 +47,33 @@ var _target: CharacterBody3D
 var _target_orientation: Node3D
 var _bob_time := 0.0
 var _visuals_built := false
+var _interaction_cooldown_remaining := 0.0
+var _message_time_remaining := 0.0
+
+@onready var _interaction_prompt: Label3D = get_node_or_null("InteractionPrompt") as Label3D
 
 
 func _ready() -> void:
 	_build_visuals()
+	var dialogue := get_node_or_null("DialogueUI")
+	if dialogue != null and dialogue.has_signal("message_changed"):
+		dialogue.message_changed.connect(_on_dialogue_message_changed)
 	if not target_path.is_empty():
 		set_target(get_node_or_null(target_path) as CharacterBody3D)
 	if _target:
 		global_position = get_follow_target_position()
 		rotation.y = _target_heading_y()
+	_update_interaction_prompt()
+
+
+func _process(delta: float) -> void:
+	if _interaction_cooldown_remaining > 0.0:
+		_interaction_cooldown_remaining = maxf(_interaction_cooldown_remaining - delta, 0.0)
+	if _message_time_remaining > 0.0:
+		_message_time_remaining = maxf(_message_time_remaining - delta, 0.0)
+		if _message_time_remaining <= 0.0:
+			show_message("")
+	_update_interaction_prompt()
 
 
 func _physics_process(delta: float) -> void:
@@ -64,12 +90,47 @@ func _physics_process(delta: float) -> void:
 
 
 func _unhandled_input(event: InputEvent) -> void:
+	if event.is_action_pressed(INTERACTION_INPUT_ACTION):
+		if interact():
+			get_viewport().set_input_as_handled()
+		return
 	if not event.is_action_pressed(DECISION_INPUT_ACTION):
 		return
 	var decisions_client := get_node_or_null("DecisionsClient") as DotsDecisionClient
 	if decisions_client != null:
 		decisions_client.request_decision(DECISION_CONTEXT)
 		get_viewport().set_input_as_handled()
+
+
+func is_interaction_available() -> bool:
+	if not is_instance_valid(_target) or _interaction_cooldown_remaining > 0.0:
+		return false
+	if get_interaction_distance() > interaction_radius:
+		return false
+	var decisions_client := get_node_or_null("DecisionsClient") as DotsDecisionClient
+	return decisions_client == null or not decisions_client.is_requesting()
+
+
+func get_interaction_distance() -> float:
+	if not is_instance_valid(_target):
+		return INF
+	return global_position.distance_to(_target.global_position)
+
+
+func interact() -> bool:
+	if not is_interaction_available():
+		return false
+	_interaction_cooldown_remaining = interaction_cooldown
+	_message_time_remaining = 0.0
+	show_message("")
+	_update_interaction_prompt()
+	interaction_started.emit()
+	var decisions_client := get_node_or_null("DecisionsClient") as DotsDecisionClient
+	if decisions_client != null:
+		decisions_client.request_decision(DECISION_CONTEXT)
+	else:
+		show_message("ごめんね、今はうまく通信できないみたい。")
+	return true
 
 
 func set_target(target: CharacterBody3D) -> void:
@@ -116,6 +177,32 @@ func show_message(message: String) -> void:
 	var dialogue := get_node_or_null("DialogueUI")
 	if dialogue != null and dialogue.has_method("show_message"):
 		dialogue.call("show_message", message)
+	else:
+		_on_dialogue_message_changed(message)
+
+
+func _on_dialogue_message_changed(message: String) -> void:
+	_message_time_remaining = interaction_message_duration if not message.is_empty() else 0.0
+	_update_interaction_prompt()
+
+
+func _update_interaction_prompt() -> void:
+	if _interaction_prompt == null:
+		return
+	var camera := get_viewport().get_camera_3d()
+	var screen_right := global_basis.x
+	if camera != null:
+		screen_right = camera.global_basis.x
+	_interaction_prompt.global_position = (
+		global_position
+		+ Vector3.UP * INTERACTION_PROMPT_HEIGHT
+		+ screen_right * INTERACTION_PROMPT_HORIZONTAL_OFFSET
+	)
+	var dialogue := get_node_or_null("DialogueUI")
+	var dialogue_visible: bool = false
+	if dialogue != null:
+		dialogue_visible = dialogue.visible
+	_interaction_prompt.visible = is_interaction_available() and not dialogue_visible
 
 
 func _follow_weight(delta: float) -> float:

@@ -4,12 +4,12 @@
 [ext_resource type="FontFile" path="res://player/dots/fonts/MPLUS1[wght].ttf" id="2_font"]
 
 [sub_resource type="QuadMesh" id="QuadMesh_bubble"]
-size = Vector2(3.6, 1.4)
+size = Vector2(2.45, 0.88)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_bubble"]
 transparency = 1
 shading_mode = 0
-albedo_color = Color(0.0666667, 0.0941176, 0.14902, 0.88)
+albedo_color = Color(0.0352941, 0.0588235, 0.0941176, 0.92)
 billboard_mode = 1
 no_depth_test = true
 
@@ -17,20 +17,21 @@ no_depth_test = true
 script = ExtResource("1_dialogue")
 
 [node name="Bubble" type="Node3D" parent="."]
+position = Vector3(0, 3.0, 0)
 
 [node name="Panel" type="MeshInstance3D" parent="Bubble"]
-position = Vector3(0, 1.9, 0.08)
+position = Vector3(0, 0, 0.08)
 mesh = SubResource("QuadMesh_bubble")
 material_override = SubResource("StandardMaterial3D_bubble")
 
 [node name="Message" type="Label3D" parent="."]
-position = Vector3(0, 1.9, 0.1)
+position = Vector3(0, 3.0, 0.1)
 billboard = 1
 text = ""
 font = ExtResource("2_font")
-font_size = 48
+font_size = 24
 modulate = Color(0.960784, 0.972549, 1, 1)
-outline_size = 8
+outline_size = 5
 outline_modulate = Color(0.0666667, 0.0941176, 0.14902, 1)
 fixed_size = true
 pixel_size = 0.001

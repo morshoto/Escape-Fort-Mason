@@ -25,6 +25,30 @@ func _run() -> void:
 	_check(stage.name == "FortMason", "Fort Mason scene has a stable root name")
 	_check(stage.get_node_or_null("OutdoorPlaza") is Node3D, "Outdoor plaza exists")
 	_check(stage.get_node_or_null("WarehouseInterior") is Node3D, "Warehouse interior exists")
+	var outdoor := stage.get_node_or_null("OutdoorPlaza") as Node3D
+	var plaza_ground := outdoor.get_node_or_null("Ground/Visual") as MeshInstance3D if outdoor != null else null
+	if plaza_ground != null and plaza_ground.mesh is BoxMesh:
+		var plaza_size := (plaza_ground.mesh as BoxMesh).size
+		_check(plaza_size.x <= 32.0 and plaza_size.z <= 30.0, "Outdoor plaza blockout stays near human scale")
+	else:
+		_check(false, "Outdoor plaza has measurable ground geometry")
+	var entrance_arch := outdoor.get_node_or_null("WarehouseEntryArch") as Node3D if outdoor != null else null
+	var left_pillar := entrance_arch.get_node_or_null("LeftPillar") as Node3D if entrance_arch != null else null
+	var right_pillar := entrance_arch.get_node_or_null("RightPillar") as Node3D if entrance_arch != null else null
+	var lintel := entrance_arch.get_node_or_null("Lintel") as Node3D if entrance_arch != null else null
+	if left_pillar != null and right_pillar != null:
+		var left_mesh := (left_pillar.get_node("Visual") as MeshInstance3D).mesh as BoxMesh
+		var right_mesh := (right_pillar.get_node("Visual") as MeshInstance3D).mesh as BoxMesh
+		var clear_width := right_pillar.position.x - right_mesh.size.x * 0.5 - left_pillar.position.x - left_mesh.size.x * 0.5
+		_check(clear_width >= 4.5 and clear_width <= 6.5, "Warehouse entrance is a believable human-scale width")
+	else:
+		_check(false, "Warehouse entrance exposes both pillars")
+	if lintel != null:
+		var lintel_mesh := (lintel.get_node("Visual") as MeshInstance3D).mesh as BoxMesh
+		var clear_height := lintel.position.y - lintel_mesh.size.y * 0.5
+		_check(clear_height >= 3.0 and clear_height <= 4.0, "Warehouse entrance has a believable loading-door height")
+	else:
+		_check(false, "Warehouse entrance exposes a lintel")
 	var warehouse := stage.get_node_or_null("WarehouseInterior") as Node3D
 	var roof_panel := warehouse.get_node_or_null("RoofPanel") as Node3D if warehouse != null else null
 	_check(roof_panel != null, "Warehouse has a roof panel")

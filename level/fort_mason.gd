@@ -4,12 +4,12 @@ extends Node3D
 const LEVEL_COLLISION_LAYER := 2
 
 const NIGHT_SKY := Color("#050b1c")
-const MOONLIGHT := Color("#8da9e6")
-const OUTDOOR_GROUND := Color("#27364c")
-const INDOOR_FLOOR := Color("#3b414d")
-const WAREHOUSE_WALL := Color("#536174")
+const MOONLIGHT := Color("#a9bfed")
+const OUTDOOR_GROUND := Color("#374a62")
+const INDOOR_FLOOR := Color("#4c5665")
+const WAREHOUSE_WALL := Color("#637388")
 const WAREHOUSE_TRIM := Color("#c56d43")
-const METAL := Color("#202a39")
+const METAL := Color("#303d50")
 const WATER := Color("#102d4d")
 const BRIDGE := Color("#26354a")
 const LAMP_COLOR := Color("#ffd89a")
@@ -31,40 +31,40 @@ func _configure_night_environment() -> void:
 	environment.background_mode = Environment.BG_COLOR
 	environment.background_color = NIGHT_SKY
 	environment.ambient_light_source = Environment.AMBIENT_SOURCE_COLOR
-	environment.ambient_light_color = Color("#29416b")
-	environment.ambient_light_energy = 0.48
+	environment.ambient_light_color = Color("#40577d")
+	environment.ambient_light_energy = 0.68
 	environment.tonemap_mode = Environment.TONE_MAPPER_FILMIC
 	$WorldEnvironment.environment = environment
 
 	var moon := $MoonLight as DirectionalLight3D
 	moon.light_color = MOONLIGHT
-	moon.light_energy = 0.38
+	moon.light_energy = 0.55
 	moon.shadow_enabled = true
 	moon.rotation_degrees = Vector3(-48.0, -28.0, 0.0)
 
 
 func _build_outdoor_plaza() -> void:
 	var outdoor := $OutdoorPlaza as Node3D
-	_add_box(outdoor, "Ground", Vector3(34.0, 0.4, 31.0), Vector3(0.0, -0.2, 12.0), _material("outdoor_ground", OUTDOOR_GROUND))
-	_add_box(outdoor, "NorthSeawall", Vector3(34.0, 1.2, 0.4), Vector3(0.0, 0.6, 27.1), _material("seawall", METAL))
-	_add_box(outdoor, "WestBoundary", Vector3(0.4, 2.0, 31.0), Vector3(-17.0, 1.0, 12.0), _material("boundary", METAL))
-	_add_box(outdoor, "EastBoundary", Vector3(0.4, 2.0, 31.0), Vector3(17.0, 1.0, 12.0), _material("boundary", METAL))
+	_add_box(outdoor, "Ground", Vector3(30.0, 0.4, 28.0), Vector3(0.0, -0.2, 11.5), _material("outdoor_ground", OUTDOOR_GROUND))
+	_add_box(outdoor, "NorthSeawall", Vector3(30.0, 1.2, 0.4), Vector3(0.0, 0.6, 25.3), _material("seawall", METAL))
+	_add_box(outdoor, "WestBoundary", Vector3(0.4, 2.0, 28.0), Vector3(-15.0, 1.0, 11.5), _material("boundary", METAL))
+	_add_box(outdoor, "EastBoundary", Vector3(0.4, 2.0, 28.0), Vector3(15.0, 1.0, 11.5), _material("boundary", METAL))
 
 	var arch := Node3D.new()
 	arch.name = "WarehouseEntryArch"
 	outdoor.add_child(arch)
-	_add_box(arch, "LeftPillar", Vector3(1.0, 4.5, 1.0), Vector3(-7.0, 2.25, -3.7), _material("trim", WAREHOUSE_TRIM), false)
-	_add_box(arch, "RightPillar", Vector3(1.0, 4.5, 1.0), Vector3(7.0, 2.25, -3.7), _material("trim", WAREHOUSE_TRIM), false)
-	_add_box(arch, "Lintel", Vector3(15.0, 0.8, 1.0), Vector3(0.0, 4.1, -3.7), _material("trim", WAREHOUSE_TRIM), false)
+	_add_box(arch, "LeftPillar", Vector3(0.8, 3.6, 0.8), Vector3(-3.0, 1.8, -3.7), _material("trim", WAREHOUSE_TRIM), false)
+	_add_box(arch, "RightPillar", Vector3(0.8, 3.6, 0.8), Vector3(3.0, 1.8, -3.7), _material("trim", WAREHOUSE_TRIM), false)
+	_add_box(arch, "Lintel", Vector3(6.8, 0.6, 0.8), Vector3(0.0, 3.9, -3.7), _material("trim", WAREHOUSE_TRIM), false)
 
 	var lamps := Node3D.new()
 	lamps.name = "StreetLamps"
 	outdoor.add_child(lamps)
 	for lamp_data in [
-		["LampWest", Vector3(-13.0, 0.0, 7.0)],
-		["LampEast", Vector3(13.0, 0.0, 7.0)],
-		["LampPierWest", Vector3(-12.0, 0.0, 23.0)],
-		["LampPierEast", Vector3(12.0, 0.0, 23.0)],
+		["LampWest", Vector3(-6.5, 0.0, 10.5)],
+		["LampEast", Vector3(6.5, 0.0, 10.5)],
+		["LampPierWest", Vector3(-10.0, 0.0, 21.0)],
+		["LampPierEast", Vector3(10.0, 0.0, 21.0)],
 	]:
 		_add_street_lamp(lamps, lamp_data[0], lamp_data[1])
 
@@ -90,8 +90,8 @@ func _build_warehouse() -> void:
 	_add_box(warehouse, "WestWall", Vector3(0.5, 5.0, 16.0), Vector3(-10.5, 2.5, -12.0), wall_material)
 	_add_box(warehouse, "EastWall", Vector3(0.5, 5.0, 16.0), Vector3(10.5, 2.5, -12.0), wall_material)
 	_add_box(warehouse, "BackWall", Vector3(21.0, 5.0, 0.5), Vector3(0.0, 2.5, -19.75), wall_material)
-	_add_box(warehouse, "WestFrontWing", Vector3(7.0, 5.0, 0.5), Vector3(-7.0, 2.5, -4.25), wall_material)
-	_add_box(warehouse, "EastFrontWing", Vector3(7.0, 5.0, 0.5), Vector3(7.0, 2.5, -4.25), wall_material)
+	_add_box(warehouse, "WestFrontWing", Vector3(8.0, 5.0, 0.5), Vector3(-6.5, 2.5, -4.25), wall_material)
+	_add_box(warehouse, "EastFrontWing", Vector3(8.0, 5.0, 0.5), Vector3(6.5, 2.5, -4.25), wall_material)
 	_add_box(warehouse, "RoofPanel", Vector3(21.0, 0.18, 16.0), Vector3(0.0, 5.15, -12.0), _material("roof", METAL))
 
 	var roof_frame := Node3D.new()
@@ -142,6 +142,16 @@ func _build_bay_backdrop() -> void:
 
 
 func _build_lighting() -> void:
+	var outdoor := $OutdoorPlaza as Node3D
+	var entrance_light := OmniLight3D.new()
+	entrance_light.name = "EntranceFillLight"
+	entrance_light.position = Vector3(0.0, 3.1, -1.0)
+	entrance_light.light_color = LAMP_COLOR
+	entrance_light.light_energy = 2.1
+	entrance_light.omni_range = 9.0
+	entrance_light.shadow_enabled = false
+	outdoor.add_child(entrance_light)
+
 	var warehouse := $WarehouseInterior as Node3D
 	var interior_lights := Node3D.new()
 	interior_lights.name = "InteriorLights"

@@ -53,6 +53,14 @@ func _check_scene_contract() -> void:
 	_require(skeleton != null, "skin has the imported Humanoid Skeleton3D")
 	if skeleton == null:
 		return
+	var body := skin.get_node("SamModel/QuaterniusModel").find_child("SuperHero_Male", true, false) as MeshInstance3D
+	var body_material := body.material_override as ShaderMaterial if body != null else null
+	_require(body_material != null, "Sam body should use the stylized shader material")
+	if body_material != null:
+		var jacket_color = body_material.get_shader_parameter("jacket_color")
+		var pants_color = body_material.get_shader_parameter("pants_color")
+		_require(jacket_color is Color and jacket_color.r + jacket_color.g + jacket_color.b >= 0.6, "Sam jacket should retain readable night color")
+		_require(pants_color is Color and pants_color.r + pants_color.g + pants_color.b >= 0.42, "Sam trousers should remain distinguishable at night")
 	for bone_name in REQUIRED_HUMANOID_BONES:
 		_require(skeleton.find_bone(bone_name) != -1, "skin has %s Humanoid bone" % bone_name)
 	_require(skeleton.get_bone_pose_scale(skeleton.find_bone("Head")).x > 1.0, "natural proportions enlarge the head")
