@@ -33,6 +33,7 @@ jobs:
           godot --headless --path . --script tests/test_dots_dialogue.gd
           godot --headless --path . --script tests/test_dots_variants.gd
           godot --headless --path . --script tests/test_fort_mason_stage.gd
+          godot --headless --path . --script tests/test_controls_hint.gd
           godot --headless --path . --script tests/test_game_progress.gd
           godot --headless --path . --script tests/test_dots_decision_client.gd
           godot --headless --path . --script tests/test_dots_interaction.gd
