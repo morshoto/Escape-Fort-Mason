@@ -15,6 +15,7 @@ func _run() -> void:
 	_saved_endpoint = ProjectSettings.get_setting("escape_fort_mason/decisions_endpoint", "")
 	ProjectSettings.set_setting("escape_fort_mason/decisions_endpoint", "")
 	_test_interact_action_bindings()
+	await _test_prompt_screen_bounds()
 	await _test_prompt_tracks_range()
 	await _test_interaction_uses_decisions_client_and_cooldown()
 	await _test_busy_client_and_dialogue_prompt_visibility()
@@ -44,6 +45,38 @@ func _test_interact_action_bindings() -> void:
 			has_controller = true
 	_assert(has_keyboard, "E should trigger companion interaction")
 	_assert(has_controller, "Controller X should trigger companion interaction")
+
+
+func _test_prompt_screen_bounds() -> void:
+	root.size = Vector2i(1280, 720)
+	var scene := load("res://level/fort_mason.tscn") as PackedScene
+	_assert(scene != null, "Fort Mason should load for interaction prompt framing")
+	if scene == null:
+		return
+	var stage := scene.instantiate() as Node3D
+	root.add_child(stage)
+	for _frame in range(30):
+		await process_frame
+	var camera := stage.get_node("Sam/CameraController/PlayerCamera") as Camera3D
+	var dots := stage.get_node("Dots") as Node3D
+	var prompt := stage.get_node("Dots/InteractionPrompt") as Label3D
+	var screen_position := camera.unproject_position(prompt.global_position)
+	var dots_screen_position := camera.unproject_position(dots.global_position)
+	var viewport_size := root.get_visible_rect().size
+	_assert(
+		screen_position.y >= 32.0,
+		"The interaction prompt should stay fully visible below the top screen edge (y=%.1f)" % screen_position.y
+	)
+	_assert(
+		screen_position.x >= dots_screen_position.x + 100.0,
+		"The interaction prompt should sit beside Dots instead of covering its face (dx=%.1f)" % (screen_position.x - dots_screen_position.x)
+	)
+	_assert(
+		screen_position.y <= viewport_size.y - 24.0,
+		"The interaction prompt should stay visible above the bottom screen edge"
+	)
+	stage.queue_free()
+	await process_frame
 
 
 func _test_prompt_tracks_range() -> void:
