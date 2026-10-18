@@ -17,6 +17,7 @@ func _run() -> void:
 	_test_interact_action_bindings()
 	await _test_prompt_screen_bounds()
 	await _test_prompt_tracks_range()
+	_test_dialogue_draw_order()
 	await _test_interaction_uses_decisions_client_and_cooldown()
 	await _test_busy_client_and_dialogue_prompt_visibility()
 	await _test_e_input_starts_interaction()
@@ -108,6 +109,26 @@ func _test_prompt_tracks_range() -> void:
 	dots.queue_free()
 	target.queue_free()
 	await process_frame
+
+
+func _test_dialogue_draw_order() -> void:
+	var scene := load("res://player/dots/dialogue_ui.tscn") as PackedScene
+	_assert(scene != null, "Companion dialogue should load for draw-order checks")
+	if scene == null:
+		return
+	var dialogue := scene.instantiate() as DialogueUI
+	var message := dialogue.get_node("Message") as Label3D
+	var panel := dialogue.get_node("Bubble/Panel") as MeshInstance3D
+	var panel_material := panel.material_override as BaseMaterial3D
+	_assert(
+		message.render_priority > panel_material.render_priority,
+		"Dialogue text should render over its translucent panel"
+	)
+	_assert(
+		message.outline_render_priority < message.render_priority,
+		"Dialogue fill should render after its outline"
+	)
+	dialogue.free()
 
 
 func _test_interaction_uses_decisions_client_and_cooldown() -> void:
