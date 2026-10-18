@@ -280,7 +280,10 @@ func shoot() -> void:
 
 
 func reset_position() -> void:
-	transform.origin = _start_position
+	global_position = _start_position
+	velocity = Vector3.ZERO
+	_jump_hold_time_left = 0.0
+	_is_on_floor_buffer = false
 
 
 func collect_coin() -> void:
