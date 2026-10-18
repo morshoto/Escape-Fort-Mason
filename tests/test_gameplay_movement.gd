@@ -168,6 +168,8 @@ func _instantiate_player() -> CharacterBody3D:
 	var scene := load(PLAYER_SCENE_PATH) as PackedScene
 	var player := scene.instantiate() as CharacterBody3D
 	player.collision_mask = 3
+	(player.get_node("StepSound") as AudioStreamPlayer3D).stream = null
+	(player.get_node("LandingSound") as AudioStreamPlayer3D).stream = null
 	root.add_child(player)
 	return player
 
