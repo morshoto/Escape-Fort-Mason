@@ -32,6 +32,7 @@ func _run() -> void:
 	await _test_initial_state(progress, chapter_states)
 	var events := await _test_puzzles_in_any_order(progress, chapter_states)
 	_test_reset_and_replay(progress, chapter_states, events)
+	await _test_all_solve_orders(game_progress_script)
 	await _test_scene_ownership_and_restart(game_progress_script, chapter_states)
 	progress.queue_free()
 	await process_frame
@@ -131,6 +132,40 @@ func _test_reset_and_replay(progress: Object, chapter_states: Dictionary, events
 	_check(progress.is_exit_unlocked(), "A replay should unlock the exit again")
 	_check(events["puzzles"].size() == 6, "Replay should emit one event per puzzle")
 	_check(events["exits"].size() == 2, "Replay should emit one new exit event")
+
+
+func _test_all_solve_orders(game_progress_script: GDScript) -> void:
+	var solve_orders: Array[Array] = [
+		[&"logo", &"devday", &"archive"],
+		[&"logo", &"archive", &"devday"],
+		[&"devday", &"logo", &"archive"],
+		[&"devday", &"archive", &"logo"],
+		[&"archive", &"logo", &"devday"],
+		[&"archive", &"devday", &"logo"],
+	]
+	for solve_order in solve_orders:
+		var progress = game_progress_script.new()
+		root.add_child(progress)
+		await process_frame
+		var puzzle_events: Array[StringName] = []
+		var exit_events: Array[bool] = []
+		progress.puzzle_completed.connect(
+			func(puzzle_id: StringName, _completed_count: int) -> void: puzzle_events.append(puzzle_id)
+		)
+		progress.exit_unlocked.connect(func() -> void: exit_events.append(true))
+
+		for index in range(solve_order.size()):
+			_check(progress.complete_puzzle(solve_order[index]), "Each solve order should accept every puzzle")
+			_check(
+				progress.is_exit_unlocked() == (index == solve_order.size() - 1),
+				"Each solve order should unlock only on its last puzzle",
+			)
+		_check(puzzle_events == solve_order, "Completion events should preserve each solve order")
+		_check(exit_events.size() == 1, "Each solve order should unlock exactly once")
+		_check(not progress.complete_puzzle(solve_order[0]), "Duplicate solves should not unlock again")
+		_check(exit_events.size() == 1, "A duplicate solve should not emit another unlock")
+		progress.queue_free()
+		await process_frame
 
 
 func _test_scene_ownership_and_restart(game_progress_script: GDScript, chapter_states: Dictionary) -> void:
