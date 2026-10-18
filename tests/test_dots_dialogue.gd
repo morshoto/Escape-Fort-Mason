@@ -15,6 +15,7 @@ func _run() -> void:
 	await _test_dialogue_scene_contract()
 	await _test_message_api_and_wrapping()
 	await _test_debug_message_input()
+	await _test_dialogue_safe_screen_margin()
 	await _test_dots_forwards_dialogue_messages()
 
 	if _failures.is_empty():
@@ -48,22 +49,31 @@ func _test_dialogue_scene_contract() -> void:
 		_assert(message.billboard == BaseMaterial3D.BILLBOARD_ENABLED, "Dialogue message should face the camera")
 		_assert(message.fixed_size, "Dialogue message should stay readable at distance")
 		_assert(message.outline_size > 0, "Dialogue message should have a readable outline")
+		_assert(message.font_size <= 32, "Dialogue text should use a compact readable font size")
 
 	var bubble_root := dialogue.get_node_or_null("Bubble") as Node3D
 	var bubble := dialogue.get_node_or_null("Bubble/Panel") as MeshInstance3D
 	_assert(bubble_root != null, "Dialogue UI should expose a speech bubble root")
 	_assert(bubble != null, "Dialogue UI should include a speech bubble panel")
+	_assert(not dialogue.visible, "Dialogue UI should start hidden until Dots speaks")
 	if bubble != null:
 		var material := bubble.material_override as StandardMaterial3D
 		_assert(material != null, "Speech bubble should have a material")
 		if material != null:
 			_assert(material.billboard_mode == BaseMaterial3D.BILLBOARD_ENABLED, "Speech bubble should face the camera")
+		var panel_mesh := bubble.mesh as QuadMesh
+		_assert(panel_mesh != null, "Speech bubble panel should use a QuadMesh")
+		if panel_mesh != null:
+			_assert(panel_mesh.size.x <= 3.0 and panel_mesh.size.y <= 1.1, "Speech bubble panel should be compact")
 		var near_scale: float = bubble_root.scale.x
 		camera.position.z = 16.0
 		await process_frame
 		_assert(bubble_root.scale.x > near_scale, "Speech bubble should scale for distant cameras")
+		camera.position.z = 64.0
+		await process_frame
+		_assert(bubble_root.scale.x <= 1.25, "Speech bubble scale should stay bounded at long distances")
 
-	_assert(dialogue.call("get_message") == "こんにちは、Sam！", "Dialogue UI should show the sample greeting")
+	_assert(dialogue.call("get_message").is_empty(), "Dialogue UI should not show a greeting before interaction")
 	dialogue.queue_free()
 	camera.queue_free()
 	await process_frame
@@ -88,8 +98,13 @@ func _test_message_api_and_wrapping() -> void:
 	var display_text := message.text
 	_assert(display_text.contains("\n"), "Long Japanese messages should wrap")
 	var max_line_characters := int(dialogue.get("max_line_characters"))
-	for line in display_text.split("\n"):
+	var max_visible_lines = dialogue.get("max_visible_lines")
+	var lines := display_text.split("\n")
+	_assert(lines.size() <= 3, "Long dialogue should be limited to three visible lines")
+	_assert(lines[lines.size() - 1].ends_with("…"), "Truncated dialogue should end with an ellipsis")
+	for line in lines:
 		_assert(line.length() <= max_line_characters, "Wrapped dialogue lines should stay within the limit")
+	_assert(max_visible_lines == 3, "Dialogue should expose a three-line limit")
 
 	dialogue.call("show_message", "")
 	_assert(not dialogue.visible, "Empty dialogue should hide the bubble")
@@ -133,6 +148,35 @@ func _test_dots_forwards_dialogue_messages() -> void:
 		dots.show_message("Dotsからの返事")
 		_assert(dialogue.call("get_message") == "Dotsからの返事", "Dots should update its dialogue bubble")
 	dots.queue_free()
+	await process_frame
+
+
+func _test_dialogue_safe_screen_margin() -> void:
+	var scene := load(DIALOGUE_SCENE_PATH) as PackedScene
+	if scene == null:
+		return
+	var anchor := Node3D.new()
+	anchor.position = Vector3(80.0, 0.0, 0.0)
+	root.add_child(anchor)
+	var dialogue := scene.instantiate()
+	anchor.add_child(dialogue)
+	var camera := Camera3D.new()
+	root.add_child(camera)
+	camera.position = Vector3(0.0, 3.0, 8.0)
+	camera.look_at(Vector3.ZERO)
+	camera.current = true
+	await process_frame
+	dialogue.call("show_message", "画面端のテスト")
+	dialogue._process(1.0 / 60.0)
+	var bubble_anchor: Vector3 = dialogue.global_position + Vector3(0.0, 1.7, 0.0)
+	var screen_position := camera.unproject_position(bubble_anchor)
+	var viewport_size := get_root().get_visible_rect().size
+	_assert(screen_position.x >= viewport_size.x * 0.08, "Dialogue should stay inside the left screen margin")
+	_assert(screen_position.x <= viewport_size.x * 0.92, "Dialogue should stay inside the right screen margin")
+	_assert(screen_position.y >= viewport_size.y * 0.1, "Dialogue should stay inside the top screen margin")
+	_assert(screen_position.y <= viewport_size.y * 0.9, "Dialogue should stay inside the bottom screen margin")
+	anchor.queue_free()
+	camera.queue_free()
 	await process_frame
 
 
