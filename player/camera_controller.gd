@@ -5,6 +5,7 @@ enum CAMERA_PIVOT { OVER_SHOULDER, THIRD_PERSON }
 @export var invert_mouse_y := false
 @export_range(0.0, 1.0) var mouse_sensitivity := 0.25
 @export_range(0.0, 8.0) var joystick_sensitivity := 2.0
+@export_range(1.0, 30.0, 0.5) var position_smoothing_speed := 14.0
 @export var tilt_upper_limit := deg_to_rad(-60.0)
 @export var tilt_lower_limit := deg_to_rad(60.0)
 
@@ -52,8 +53,11 @@ func _process(delta: float) -> void:
 
 	# Set camera controller to current ground level for the character
 	var target_position := _anchor.global_position + _offset
-	target_position.y = lerp(global_position.y, _anchor._ground_height, 0.1)
-	global_position = target_position
+	target_position.y = _anchor._ground_height
+	global_position = global_position.lerp(
+		target_position,
+		1.0 - exp(-position_smoothing_speed * delta),
+	)
 
 	# Rotates camera using euler rotation
 	_euler_rotation.x += _tilt_input * delta
