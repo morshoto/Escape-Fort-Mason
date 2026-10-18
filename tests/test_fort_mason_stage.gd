@@ -124,6 +124,11 @@ func _run() -> void:
 			sam.test_move(sam.global_transform, Vector3.DOWN * 2.0),
 			"Sam has ground collision at the outdoor spawn",
 		)
+		var doorway_support_transform := Transform3D(Basis.IDENTITY, Vector3(0.0, 1.0, -3.25))
+		_check(
+			sam.test_move(doorway_support_transform, Vector3.DOWN * 2.0),
+			"Sam has continuous ground support through the warehouse doorway",
+		)
 		var entrance_transform := Transform3D(Basis.IDENTITY, Vector3(0.0, 1.0, 4.0))
 		_check(
 			not sam.test_move(entrance_transform, Vector3(0.0, 0.0, -7.0)),
