@@ -124,12 +124,24 @@ browser therefore showed the expected local fallback. The CUA browser wrapper
 also reported `WrongDocumentError` when the game requested pointer lock, so
 mouse-driven camera rotation was not reverified in this run.
 
-### Native GUI limitation
+### Native headed gameplay QA — partial (2026-10-18)
 
-Native Godot interactive QA remains pending. The Computer Use call for the
-running Godot app returned `cgWindowNotFound`, and the available desktop capture
-showed the macOS lock screen. The saved Godot-rendered screenshots and headless
-scene tests verify rendering and runtime contracts, but they do not count as a
-native interactive playtest. Browser `E` interaction was verified as described
-above; full native keyboard, mouse, and controller playthrough remains
-unverified.
+A native Godot 4.7.2 debug window rendered the Fort Mason scene with Sam, Dots,
+and the interaction prompt. These observations are partial Computer Use
+evidence; no native screenshot was saved to the repository.
+
+| Check | Result | Evidence / limit |
+| --- | --- | --- |
+| Scene and interaction prompt | OBSERVED | The debug window rendered Sam, Dots, and the Japanese `E 話す` prompt. |
+| Keyboard movement | PARTIAL | Repeated W taps moved Sam toward Dots; repeated S taps moved him back and changed his facing. Left/right, diagonal, continuous movement, walls, and warehouse traversal were not checked. |
+| Dots interaction | PASS (fallback observed) | E opened the Japanese fallback dialogue panel. The message was visible in the native window, but readability was not confidently judged from the view. |
+| Dialogue readability | PENDING | The dark dialogue panel appeared; native text legibility and longer Japanese messages still need review. The Chromium screenshots above are separate evidence. |
+| Jump and landing | PENDING | Repeated space taps produced no clear visible jump. The input bridge exposes taps rather than a held key, so this does not establish a gameplay failure or pass. |
+| Camera rotation and collision | INCONCLUSIVE | A small CUA drag caused a steep camera tilt. Pointer capture may have turned the initial cursor relocation into a large relative delta; framing and collision were not validated. |
+| Desktop availability | BLOCKED | The macOS login screen reappeared and the Godot window bridge returned `cgWindowNotFound`. Native playtesting requires the desktop to be unlocked. |
+
+Movement and the fallback interaction have native observations, but they do
+not satisfy the required native interactive QA gate. Full movement coverage,
+jump, camera framing/collision, dialogue readability, and indoor/outdoor review
+remain unverified. The saved Godot-rendered screenshots and headless scene
+tests verify rendering and runtime contracts, not native interactive behavior.
