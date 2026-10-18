@@ -226,7 +226,7 @@ func _orient_character_to_direction(direction: Vector3, delta: float) -> void:
 	_character_skin.transform.basis = Basis(
 		_character_skin.transform.basis.get_rotation_quaternion().slerp(
 			rotation_basis,
-				1.0 - exp(-rotation_speed * delta),
+			1.0 - exp(-rotation_speed * delta),
 		)
 	).scaled(model_scale)
 
