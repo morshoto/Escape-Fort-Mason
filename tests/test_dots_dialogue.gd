@@ -13,6 +13,7 @@ func _init() -> void:
 
 func _run() -> void:
 	await _test_dialogue_scene_contract()
+	await _test_dialogue_camera_side_offset()
 	await _test_message_api_and_wrapping()
 	await _test_debug_message_input()
 	await _test_dialogue_safe_screen_margin()
@@ -121,6 +122,35 @@ func _test_message_api_and_wrapping() -> void:
 	dialogue.call("show_message", "")
 	_assert(not dialogue.visible, "Empty dialogue should hide the bubble")
 	dialogue.queue_free()
+	await process_frame
+
+
+func _test_dialogue_camera_side_offset() -> void:
+	var anchor := Node3D.new()
+	root.add_child(anchor)
+	var dialogue_scene := load(DIALOGUE_SCENE_PATH) as PackedScene
+	if dialogue_scene == null:
+		return
+	var dialogue := dialogue_scene.instantiate()
+	anchor.add_child(dialogue)
+	var camera := Camera3D.new()
+	root.add_child(camera)
+	camera.position = Vector3(0.0, 3.0, 8.0)
+	camera.look_at(Vector3.ZERO)
+	camera.current = true
+	await process_frame
+	dialogue.call("show_message", "画面中央のテスト")
+	dialogue._process(1.0 / 60.0)
+	var offset := float(dialogue.get("bubble_horizontal_offset"))
+	var height := float(dialogue.get("bubble_anchor_height"))
+	var expected_anchor := anchor.global_position + camera.global_basis.x * offset + Vector3(0.0, height, 0.0)
+	var bubble_root := dialogue.get_node("Bubble") as Node3D
+	_assert(
+		camera.unproject_position(bubble_root.global_position).distance_to(camera.unproject_position(expected_anchor)) <= 1.0,
+		"Speech bubble should render at its camera-side offset when the anchor is inside the safe area"
+	)
+	anchor.queue_free()
+	camera.queue_free()
 	await process_frame
 
 
